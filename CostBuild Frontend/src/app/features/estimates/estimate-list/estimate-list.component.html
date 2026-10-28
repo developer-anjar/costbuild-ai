@@ -1,0 +1,236 @@
+<div class="estimates-page">
+  <!-- Top Bar -->
+  <div class="page-top-bar">
+    <div>
+      <h1 class="page-title">My Estimates</h1>
+      <p class="page-subtitle">Browse, search, duplicate, and analyze all your project software estimates.</p>
+    </div>
+
+    <a routerLink="/app/new-estimate" class="btn btn-primary">
+      <app-icon name="plus" [size]="16" />
+      Create Estimate
+    </a>
+  </div>
+
+  <!-- Filters & View Toggle Toolbar -->
+  <div class="toolbar-card card">
+    <div class="search-box">
+      <app-icon name="search" [size]="16" color="#A8A29E" class="search-icon" />
+      <input
+        type="text"
+        placeholder="Search estimates by name or keyword..."
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        class="search-input"
+      />
+    </div>
+
+    <div class="filters-wrap">
+      <!-- Category -->
+      <select
+        [ngModel]="categoryFilter()"
+        (ngModelChange)="categoryFilter.set($event)"
+        class="filter-select"
+      >
+        <option value="all">All Categories</option>
+        <option value="Mobile Application">Mobile Application</option>
+        <option value="SaaS Platform">SaaS Platform</option>
+        <option value="Marketplace">Marketplace</option>
+        <option value="AI Application">AI Application</option>
+        <option value="Business Management System">Business Management System</option>
+        <option value="Portfolio or Marketing Website">Portfolio Website</option>
+      </select>
+
+      <!-- Budget Range Filter -->
+      <select
+        [ngModel]="budgetFilter()"
+        (ngModelChange)="budgetFilter.set($event)"
+        class="filter-select"
+      >
+        <option value="all">All Budgets</option>
+        <option value="under_10l">Under ₹10 Lakhs</option>
+        <option value="10l_to_30l">₹10L – ₹30 Lakhs</option>
+        <option value="over_30l">Over ₹30 Lakhs</option>
+      </select>
+
+      <!-- Sort By -->
+      <select
+        [ngModel]="sortBy()"
+        (ngModelChange)="sortBy.set($event)"
+        class="filter-select"
+      >
+        <option value="date">Sort by Date</option>
+        <option value="budget">Sort by Budget</option>
+        <option value="name">Sort by Name</option>
+      </select>
+
+      <!-- Grid vs List View -->
+      <div class="view-toggles">
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="viewMode() === 'grid'"
+          (click)="viewMode.set('grid')"
+          title="Grid View"
+        >
+          <app-icon name="layout-dashboard" [size]="16" />
+        </button>
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="viewMode() === 'list'"
+          (click)="viewMode.set('list')"
+          title="List View"
+        >
+          <app-icon name="file-text" [size]="16" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content: Grid or List View -->
+  @if (filteredEstimates().length > 0) {
+    @if (viewMode() === 'grid') {
+      <div class="estimates-grid">
+        @for (est of filteredEstimates(); track est.id) {
+          <div class="estimate-grid-card card" (click)="openEstimate(est.id)">
+            <!-- Top Card Bar -->
+            <div class="card-top">
+              <span class="badge badge-orange">{{ est.category }}</span>
+              @if (est.isSample) {
+                <span class="sample-tag">Demo Sample</span>
+              }
+            </div>
+
+            <h3 class="est-name">{{ est.projectName }}</h3>
+            <p class="est-desc">{{ est.description }}</p>
+
+            <div class="est-pricing-box">
+              <span class="pricing-label">TARGET BUDGET</span>
+              <span class="pricing-value text-orange">
+                {{ rateCard.formatCurrency(est.totalBudget, est.currency) }}
+              </span>
+              <span class="pricing-range">
+                Range: {{ rateCard.formatCurrency(est.budgetRange.min, est.currency) }} &ndash; {{ rateCard.formatCurrency(est.budgetRange.max, est.currency) }}
+              </span>
+            </div>
+
+            <div class="est-meta-grid">
+              <div class="meta-item">
+                <app-icon name="clock" [size]="14" color="#78716C" />
+                <span>{{ est.timelineWeeks }} Weeks</span>
+              </div>
+              <div class="meta-item">
+                <app-icon name="code" [size]="14" color="#78716C" />
+                <span>{{ est.features.length }} Modules</span>
+              </div>
+              <div class="meta-item">
+                <app-icon name="users" [size]="14" color="#78716C" />
+                <span>{{ est.team.length }} Roles</span>
+              </div>
+            </div>
+
+            <div class="card-footer-actions" (click)="$event.stopPropagation()">
+              <button type="button" class="btn btn-secondary btn-sm" (click)="openEstimate(est.id)">
+                <app-icon name="eye" [size]="14" />
+                Open Report
+              </button>
+              <div class="secondary-actions">
+                <button type="button" class="icon-action-btn" (click)="duplicateEstimate(est.id)" title="Duplicate">
+                  <app-icon name="copy" [size]="15" color="#78716C" />
+                </button>
+                <button type="button" class="icon-action-btn" (click)="editEstimate(est)" title="Edit">
+                  <app-icon name="edit" [size]="15" color="#78716C" />
+                </button>
+                <button type="button" class="icon-action-btn btn-danger-icon" (click)="promptDelete(est)" title="Delete">
+                  <app-icon name="trash" [size]="15" color="#DC2626" />
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- List Table View -->
+      <div class="table-card card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Project Name</th>
+                <th>Category</th>
+                <th>Estimated Budget</th>
+                <th>Timeline</th>
+                <th>Features</th>
+                <th>Updated</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (est of filteredEstimates(); track est.id) {
+                <tr class="table-row-item">
+                  <td class="name-col" (click)="openEstimate(est.id)">
+                    <strong>{{ est.projectName }}</strong>
+                    @if (est.isSample) {
+                      <span class="sample-tag">Demo Sample</span>
+                    }
+                  </td>
+                  <td>
+                    <span class="badge badge-neutral">{{ est.category }}</span>
+                  </td>
+                  <td>
+                    <span class="budget-bold text-orange">
+                      {{ rateCard.formatCurrency(est.totalBudget, est.currency) }}
+                    </span>
+                    <span class="range-sub">
+                      {{ rateCard.formatCurrency(est.budgetRange.min, est.currency) }} &ndash; {{ rateCard.formatCurrency(est.budgetRange.max, est.currency) }}
+                    </span>
+                  </td>
+                  <td>{{ est.timelineWeeks }} Weeks</td>
+                  <td>{{ est.features.length }} Modules</td>
+                  <td>{{ est.updatedAt | date:'mediumDate' }}</td>
+                  <td class="text-right">
+                    <div class="table-actions">
+                      <button type="button" class="btn btn-secondary btn-sm" (click)="openEstimate(est.id)">
+                        <app-icon name="eye" [size]="14" />
+                        View
+                      </button>
+                      <button type="button" class="icon-action-btn" (click)="duplicateEstimate(est.id)" title="Duplicate">
+                        <app-icon name="copy" [size]="15" />
+                      </button>
+                      <button type="button" class="icon-action-btn btn-danger-icon" (click)="promptDelete(est)" title="Delete">
+                        <app-icon name="trash" [size]="15" color="#DC2626" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="card p-5">
+      <app-empty-state
+        icon="file-text"
+        title="No estimates match your criteria"
+        description="Try adjusting your search keywords, category filters, or budget ranges."
+        actionText="Create New Estimate"
+        (actionClicked)="router.navigate(['/app/new-estimate'])"
+      />
+    </div>
+  }
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<app-confirmation-dialog
+  [isOpen]="isConfirmOpen()"
+  title="Delete Estimate Record"
+  [message]="'Are you sure you want to delete &quot;' + (estimateToDelete()?.projectName || '') + '&quot;? This estimate report will be removed from local storage.'"
+  confirmText="Delete Record"
+  [isDanger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/>
+

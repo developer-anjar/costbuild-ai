@@ -1,0 +1,126 @@
+<div class="projects-page">
+  <!-- Top Bar -->
+  <div class="page-top-bar">
+    <div>
+      <h1 class="page-title">Tracked Projects</h1>
+      <p class="page-subtitle">Track implementation execution, milestone status, and feature checklists.</p>
+    </div>
+
+    <a routerLink="/app/estimates" class="btn btn-primary">
+      <app-icon name="plus" [size]="16" />
+      Create Project from Estimate
+    </a>
+  </div>
+
+  <!-- Filters Toolbar -->
+  <div class="toolbar-card card">
+    <div class="search-box">
+      <app-icon name="search" [size]="16" color="#A8A29E" class="search-icon" />
+      <input
+        type="text"
+        placeholder="Search projects..."
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        class="search-input"
+      />
+    </div>
+
+    <div class="filters-wrap">
+      <select
+        [ngModel]="statusFilter()"
+        (ngModelChange)="statusFilter.set($event)"
+        class="filter-select"
+      >
+        <option value="all">All Statuses</option>
+        <option value="planning">Planning</option>
+        <option value="in_progress">In Progress</option>
+        <option value="on_hold">On Hold</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Projects Grid -->
+  @if (filteredProjects().length > 0) {
+    <div class="projects-grid">
+      @for (proj of filteredProjects(); track proj.id) {
+        <div class="project-card card" (click)="openProject(proj.id)">
+          <div class="proj-header">
+            <span class="badge" [class]="getStatusBadgeClass(proj.status)">
+              {{ formatStatus(proj.status) }}
+            </span>
+            <span class="proj-cat">{{ proj.category }}</span>
+          </div>
+
+          <h3 class="proj-name">{{ proj.name }}</h3>
+          <p class="proj-desc">{{ proj.description }}</p>
+
+          <div class="proj-meta-box">
+            <div class="p-meta-item">
+              <span class="pm-lbl">Budget</span>
+              <span class="pm-val text-orange">{{ rateCard.formatCurrency(proj.budget, 'INR') }}</span>
+            </div>
+            <div class="p-meta-item">
+              <span class="pm-lbl">Timeline</span>
+              <span class="pm-val">{{ proj.timelineWeeks }} Weeks</span>
+            </div>
+            <div class="p-meta-item">
+              <span class="pm-lbl">Features Done</span>
+              <span class="pm-val">{{ proj.completedFeatures.length || 0 }} Completed</span>
+            </div>
+          </div>
+
+          <div class="proj-notes">
+            <span class="note-label">Status Note:</span>
+            <p>{{ proj.notes || 'No recent notes.' }}</p>
+          </div>
+
+          <div class="card-footer" (click)="$event.stopPropagation()">
+            <select
+              [ngModel]="proj.status"
+              (ngModelChange)="updateProjectStatus(proj.id, $event, $event)"
+              class="status-dropdown"
+            >
+              <option value="planning">Planning</option>
+              <option value="estimation_completed">Estimation Done</option>
+              <option value="in_progress">In Progress</option>
+              <option value="on_hold">On Hold</option>
+              <option value="completed">Completed</option>
+            </select>
+
+            <div class="actions-group">
+              <button type="button" class="btn btn-secondary btn-sm" (click)="openProject(proj.id)">
+                Open Workspace
+              </button>
+              <button type="button" class="del-btn" (click)="promptDelete(proj, $event)" title="Delete project">
+                <app-icon name="trash" [size]="15" color="#DC2626" />
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="card p-5">
+      <app-empty-state
+        icon="folder-kanban"
+        title="No tracked projects yet"
+        description="Convert any saved estimate into a tracked execution project with status milestones and feature checklists."
+        actionText="Browse Estimates to Track"
+        (actionClicked)="router.navigate(['/app/estimates'])"
+      />
+    </div>
+  }
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<app-confirmation-dialog
+  [isOpen]="isConfirmOpen()"
+  title="Delete Tracked Project"
+  [message]="'Are you sure you want to remove tracked project &quot;' + (projectToDelete()?.name || '') + '&quot;? Linked estimate remains safe.'"
+  confirmText="Delete Project"
+  [isDanger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/>
+

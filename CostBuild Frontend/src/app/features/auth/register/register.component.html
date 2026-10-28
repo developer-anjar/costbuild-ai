@@ -1,0 +1,146 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card card">
+    <div class="auth-header text-center">
+      <div class="logo-box">
+        <app-logo [linkTo]="'/'" size="lg" />
+      </div>
+      <h2 class="auth-title">Create Free Account</h2>
+      <p class="auth-subtitle">Get instant access to AI-powered cost estimation and sprint roadmaps</p>
+
+      <div class="demo-badge-banner">
+        <app-icon name="info" [size]="14" color="#8B7CE8" />
+        <span>Demonstration Account &bull; Local Storage Persistence</span>
+      </div>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <!-- Full Name -->
+      <div class="form-group">
+        <label class="form-label" for="reg-name">Full Name</label>
+        <input
+          id="reg-name"
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [class.is-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+          placeholder="e.g. Sarah Jenkins"
+        />
+        @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+          <div class="form-error">Please enter your full name (at least 2 characters).</div>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Work Email</label>
+        <input
+          id="reg-email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          placeholder="sarah@innovate.co"
+        />
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <div class="form-error">Please provide a valid email address.</div>
+        }
+      </div>
+
+      <!-- User Role Selector -->
+      <div class="form-group">
+        <label class="form-label">I am a...</label>
+        <div class="role-chips">
+          @for (r of roles; track r) {
+            <button
+              type="button"
+              class="role-chip-btn"
+              [class.active]="registerForm.get('role')?.value === r"
+              (click)="registerForm.patchValue({ role: r })"
+            >
+              {{ r }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Organization Name -->
+      <div class="form-group">
+        <label class="form-label" for="reg-org">Organization / Venture Name (Optional)</label>
+        <input
+          id="reg-org"
+          type="text"
+          formControlName="organization"
+          class="form-control"
+          placeholder="e.g. Apex Labs"
+        />
+      </div>
+
+      <!-- Password & Confirm Password Grid -->
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label" for="reg-pwd">Password</label>
+          <div class="password-input-wrap">
+            <input
+              id="reg-pwd"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              class="form-control pr-10"
+              [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+              placeholder="Min. 6 chars"
+            />
+            <button type="button" class="toggle-eye" (click)="toggleShowPassword()" aria-label="Toggle password">
+              <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="16" color="#78716C" />
+            </button>
+          </div>
+          @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            <div class="form-error">Must be 6+ chars.</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-cpwd">Confirm Password</label>
+          <input
+            id="reg-cpwd"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            class="form-control"
+            [class.is-invalid]="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched"
+            placeholder="Repeat password"
+          />
+          @if (registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched) {
+            <div class="form-error">Passwords do not match.</div>
+          }
+        </div>
+      </div>
+
+      <!-- Terms Checkbox -->
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="terms" class="custom-checkbox" />
+          <span>I understand estimates are decision-support models and agree to demo terms.</span>
+        </label>
+        @if (registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched) {
+          <div class="form-error">You must accept the terms to proceed.</div>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary btn-lg w-full" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <app-icon name="refresh-cw" [size]="18" class="spin-icon" />
+          <span>Creating Account...</span>
+        } @else {
+          <app-icon name="check" [size]="18" />
+          <span>Create Free Account</span>
+        }
+      </button>
+
+      <!-- Sign In Link -->
+      <div class="auth-footer text-center">
+        <span>Already have an account?</span>
+        <a routerLink="/login" class="login-link font-bold"> Sign In</a>
+      </div>
+    </form>
+  </div>
+</div>
+

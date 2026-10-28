@@ -1,0 +1,192 @@
+@if (project(); as proj) {
+  <div class="project-detail-container">
+    <!-- Top Nav Back & Title -->
+    <div class="proj-header-card card">
+      <div class="header-breadcrumb">
+        <a routerLink="/app/projects" class="back-link">
+          <app-icon name="arrow-left" [size]="15" />
+          Back to Projects
+        </a>
+      </div>
+
+      <div class="header-main-row">
+        <div>
+          <div class="badge-row">
+            <span class="badge badge-orange">{{ proj.category }}</span>
+            <span class="badge badge-lavender">{{ proj.status.replace('_', ' ') | uppercase }}</span>
+          </div>
+          <h1 class="project-title">{{ proj.name }}</h1>
+          <p class="project-subtitle">{{ proj.description }}</p>
+        </div>
+
+        <div class="header-actions">
+          @if (proj.estimateId) {
+            <a [routerLink]="['/app/estimates', proj.estimateId]" class="btn btn-secondary btn-sm">
+              <app-icon name="file-text" [size]="15" />
+              View Linked Estimate
+            </a>
+          }
+          <button type="button" class="btn btn-primary btn-sm" (click)="saveDetails()">
+            <app-icon name="check" [size]="15" />
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics Bar -->
+    <div class="proj-metrics-grid">
+      <div class="p-card card">
+        <span class="lbl">ALLOCATED BUDGET</span>
+        <h3 class="val text-orange">{{ rateCard.formatCurrency(proj.budget, 'INR') }}</h3>
+        <span class="sub">From baseline estimate</span>
+      </div>
+
+      <div class="p-card card">
+        <span class="lbl">PLANNED TIMELINE</span>
+        <h3 class="val">{{ proj.timelineWeeks }} Weeks</h3>
+        <span class="sub">Sprint delivery window</span>
+      </div>
+
+      <div class="p-card card">
+        <span class="lbl">FEATURE COMPLETION</span>
+        <h3 class="val text-deep-orange">{{ completionPercentage }}%</h3>
+        <span class="sub">{{ proj.completedFeatures.length || 0 }} of {{ proj.estimate?.features?.length || 0 }} finished</span>
+      </div>
+
+      <div class="p-card card">
+        <span class="lbl">STATUS MILESTONE</span>
+        <div class="status-select-wrap">
+          <select
+            [ngModel]="proj.status"
+            (ngModelChange)="updateStatus($event)"
+            class="status-select"
+          >
+            <option value="planning">Planning</option>
+            <option value="estimation_completed">Estimation Completed</option>
+            <option value="in_progress">In Progress</option>
+            <option value="on_hold">On Hold</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <span class="sub">Execution phase</span>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-card card">
+      <div class="progress-bar-header">
+        <span class="pb-title">Implementation Checklist Progress</span>
+        <span class="pb-pct">{{ completionPercentage }}% Complete</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="completionPercentage"></div>
+      </div>
+    </div>
+
+    <!-- 2 Column Layout: Checklist Left, Notes & Dates Right -->
+    <div class="proj-body-grid">
+      <!-- Feature Completion Checklist -->
+      <div class="checklist-card card">
+        <div class="card-head">
+          <h3>Feature Delivery Checklist</h3>
+          <p>Check off completed functional modules as your engineering team delivers sprints.</p>
+        </div>
+
+        @if (proj.estimate?.features; as features) {
+          <div class="checklist-items">
+            @for (f of features; track f.id) {
+              <div
+                class="check-row"
+                [class.checked]="isFeatureCompleted(f.id)"
+                (click)="toggleFeature(f.id)"
+              >
+                <div class="check-box" [class.box-active]="isFeatureCompleted(f.id)">
+                  @if (isFeatureCompleted(f.id)) {
+                    <app-icon name="check" [size]="14" color="#FFFFFF" />
+                  }
+                </div>
+                <div class="check-info">
+                  <span class="f-title" [class.line-through]="isFeatureCompleted(f.id)">{{ f.name }}</span>
+                  <span class="f-desc">{{ f.description }}</span>
+                </div>
+                <div class="check-badges">
+                  <span class="badge" [class.badge-orange]="f.complexity === 'complex'" [class.badge-neutral]="f.complexity !== 'complex'">
+                    {{ f.complexity }}
+                  </span>
+                  <span class="badge badge-neutral">{{ f.estimatedHours }}h</span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="no-feat-notice">No features linked to this project record.</p>
+        }
+      </div>
+
+      <!-- Notes & Schedule Sidebar -->
+      <div class="sidebar-col">
+        <!-- Execution Notes -->
+        <div class="notes-card card">
+          <div class="card-head">
+            <h3>Sprint & Execution Notes</h3>
+            <p>Log blocker updates, sprint retrospectives, and architecture changes.</p>
+          </div>
+
+          <textarea
+            rows="6"
+            [ngModel]="editedNotes()"
+            (ngModelChange)="editedNotes.set($event)"
+            class="form-control textarea"
+            placeholder="Document sprint velocity, vendor progress, or scope pivots..."
+          ></textarea>
+
+          <button type="button" class="btn btn-secondary btn-sm mt-3 w-full" (click)="saveDetails()">
+            Save Notes
+          </button>
+        </div>
+
+        <!-- Schedule Dates -->
+        <div class="dates-card card">
+          <div class="card-head">
+            <h3>Project Schedule</h3>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kickoff Start Date</label>
+            <input
+              type="date"
+              [ngModel]="editedStartDate()"
+              (ngModelChange)="editedStartDate.set($event)"
+              class="form-control"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Target Handover Date</label>
+            <input
+              type="date"
+              [ngModel]="editedTargetDate()"
+              (ngModelChange)="editedTargetDate.set($event)"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <!-- Linked Tech Summary -->
+        @if (proj.estimate?.techStack; as tech) {
+          <div class="linked-tech-card card-lavender">
+            <h4>Technology Stack</h4>
+            <div class="tech-lines">
+              <div><strong>Platform:</strong> {{ tech.platform | uppercase }}</div>
+              <div><strong>Frontend:</strong> {{ tech.frontend }}</div>
+              <div><strong>Backend:</strong> {{ tech.backend }}</div>
+              <div><strong>Database:</strong> {{ tech.database }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+

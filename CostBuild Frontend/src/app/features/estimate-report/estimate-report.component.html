@@ -1,0 +1,433 @@
+@if (estimate(); as est) {
+  <div class="report-container">
+    <!-- Top Report Action Bar -->
+    <div class="report-header-card card">
+      <div class="report-title-area">
+        <div class="report-badges-row">
+          <span class="badge badge-orange">{{ est.category }}</span>
+          <span class="badge badge-lavender">{{ est.parameters.region.replace('_', ' ') | uppercase }} BENCHMARK</span>
+          @if (est.isSample) {
+            <span class="badge badge-neutral">Demo Reference Model</span>
+          }
+        </div>
+        <h1 class="report-project-name">{{ est.projectName }}</h1>
+        <p class="report-desc">{{ est.description }}</p>
+        <div class="report-meta-line">
+          <span>Generated: {{ est.createdAt | date:'mediumDate' }}</span>
+          <span>&bull;</span>
+          <span>Hiring: {{ est.parameters.hiringModel.replace('_', ' ') }}</span>
+          <span>&bull;</span>
+          <span>Platform: {{ est.techStack.platform | uppercase }}</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="report-actions-panel no-print">
+        <div class="btn-group-primary">
+          <button type="button" class="btn btn-primary btn-sm" (click)="trackAsProject()">
+            <app-icon name="folder-kanban" [size]="15" />
+            Track as Project
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="editInWizard()">
+            <app-icon name="edit" [size]="15" />
+            Edit Requirements
+          </button>
+        </div>
+
+        <div class="btn-group-secondary">
+          <button type="button" class="btn btn-secondary btn-sm" (click)="duplicateThisEstimate()" title="Duplicate">
+            <app-icon name="copy" [size]="15" />
+            Duplicate
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="showCompareModal.set(true)" title="Compare Scenarios">
+            <app-icon name="sliders" [size]="15" />
+            Compare Scenarios
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="exportPdf()" title="Print / Save PDF">
+            <app-icon name="printer" [size]="15" />
+            Print / PDF
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="exportJson()" title="Export JSON">
+            <app-icon name="download" [size]="15" />
+            JSON
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="copyLink()" title="Copy Summary">
+            <app-icon name="file-text" [size]="15" />
+            Copy Summary
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Summary Metric Cards -->
+    <div class="summary-cards-grid">
+      <div class="sum-card card">
+        <div class="sum-header">
+          <span class="sum-lbl">RECOMMENDED BUDGET</span>
+          <div class="sum-icon bg-soft-orange">
+            <app-icon name="dollar-sign" [size]="18" color="#EA580C" />
+          </div>
+        </div>
+        <h2 class="sum-val text-orange">
+          {{ rateCard.formatCurrency(est.totalBudget, est.currency) }}
+        </h2>
+        <span class="sum-sub">
+          Range: {{ rateCard.formatCurrency(est.budgetRange.min, est.currency) }} &ndash; {{ rateCard.formatCurrency(est.budgetRange.max, est.currency) }}
+        </span>
+      </div>
+
+      <div class="sum-card card">
+        <div class="sum-header">
+          <span class="sum-lbl">ESTIMATED TIMELINE</span>
+          <div class="sum-icon bg-soft-orange">
+            <app-icon name="clock" [size]="18" color="#EA580C" />
+          </div>
+        </div>
+        <h2 class="sum-val">{{ est.timelineWeeks }} Weeks</h2>
+        <span class="sum-sub">
+          Approx. {{ (est.timelineWeeks / 2) | number:'1.0-0' }} Agile Sprints
+        </span>
+      </div>
+
+      <div class="sum-card card">
+        <div class="sum-header">
+          <span class="sum-lbl">ENGINEERING EFFORT</span>
+          <div class="sum-icon bg-lavender">
+            <app-icon name="code" [size]="18" color="#8B7CE8" />
+          </div>
+        </div>
+        <h2 class="sum-val">{{ est.totalHours }} Hours</h2>
+        <span class="sum-sub">
+          Across {{ est.phases.length }} Lifecycle Phases
+        </span>
+      </div>
+
+      <div class="sum-card card">
+        <div class="sum-header">
+          <span class="sum-lbl">RECOMMENDED TEAM</span>
+          <div class="sum-icon bg-lavender">
+            <app-icon name="users" [size]="18" color="#8B7CE8" />
+          </div>
+        </div>
+        <h2 class="sum-val">{{ est.team.length }} Roles</h2>
+        <span class="sum-sub">
+          {{ est.confidenceScore }}% Confidence Score
+        </span>
+      </div>
+    </div>
+
+    <!-- Budget Range Progress Bar Component -->
+    <app-budget-range
+      [min]="est.budgetRange.min"
+      [recommended]="est.totalBudget"
+      [max]="est.budgetRange.max"
+      [currency]="est.currency"
+      [confidenceScore]="est.confidenceScore"
+    />
+
+    <!-- AI Architecture Insights Panel (Lavender) -->
+    <app-ai-insight-card [insights]="est.insights" />
+
+    <!-- Lean MVP, Startup Standard, and Growth Ready options -->
+    <app-scenario-comparison
+      [scenarios]="est.scenarios"
+      [currency]="est.currency"
+      [selectedScenarioId]="selectedScenarioId()"
+      (scenarioSelected)="onScenarioChange($event)"
+    />
+
+    <!-- Active Scenario Banner -->
+    @if (currentScenario(); as scn) {
+      <div class="scenario-active-banner card-lavender">
+        <div class="scn-badge-box">
+          <span class="badge badge-lavender">CURRENTLY VIEWING: {{ scn.name | uppercase }}</span>
+          <span class="scn-highlight">
+            Budget Target: {{ rateCard.formatCurrency(scn.budgetMin, est.currency) }} &ndash; {{ rateCard.formatCurrency(scn.budgetMax, est.currency) }} &bull; {{ scn.timelineWeeks }} Weeks Duration
+          </span>
+        </div>
+        <p class="scn-notes">{{ scn.scopeSummary }}</p>
+      </div>
+    }
+
+    <!-- Middle Row: Chart & Roadmap -->
+    <div class="charts-row-grid">
+      <!-- Doughnut Chart & Phase Costs -->
+      <app-cost-breakdown-chart
+        [phases]="est.phases"
+        [currency]="est.currency"
+      />
+
+      <!-- Concurrency-Aware Gantt Roadmap -->
+      <app-timeline-visualization
+        [totalWeeks]="est.timelineWeeks"
+        [phases]="est.phases"
+      />
+    </div>
+
+    <!-- Labor vs Expenses Breakdown Bar -->
+    <div class="labor-expenses-card card">
+      <h3 class="card-section-title">Investment Cost Composition</h3>
+      <div class="composition-grid">
+        <div class="comp-col">
+          <span class="comp-lbl">Engineering Labor:</span>
+          <span class="comp-num">{{ rateCard.formatCurrency(est.laborCost, est.currency) }}</span>
+          <span class="comp-pct">Base feature development, UI/UX, and testing</span>
+        </div>
+
+        <div class="comp-col">
+          <span class="comp-lbl">Infrastructure & SaaS:</span>
+          <span class="comp-num">{{ rateCard.formatCurrency(est.additionalExpenses, est.currency) }}</span>
+          <span class="comp-pct">Cloud hosting, AI inference, and maintenance reserve</span>
+        </div>
+
+        <div class="comp-col">
+          <span class="comp-lbl">Contingency Reserve ({{ est.contingencyPercent }}%):</span>
+          <span class="comp-num text-orange">{{ rateCard.formatCurrency(est.contingencyAmount, est.currency) }}</span>
+          <span class="comp-pct">Risk mitigation and unexpected discovery scope</span>
+        </div>
+
+        <div class="comp-col total-col">
+          <span class="comp-lbl">Total Estimated Budget:</span>
+          <span class="comp-num text-deep-orange">{{ rateCard.formatCurrency(est.totalBudget, est.currency) }}</span>
+          <span class="comp-pct">Decision-support calculated baseline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Granular Feature-Wise Breakdown Table -->
+    <div class="feature-table-card card">
+      <div class="f-table-header">
+        <div>
+          <h3 class="card-section-title">Granular Feature Cost Breakdown</h3>
+          <p class="card-section-subtitle">
+            Calculated hours and financial allocations for all {{ est.features.length }} planned modules
+          </p>
+        </div>
+
+        <div class="f-table-filters no-print">
+          <!-- Filter -->
+          <select
+            [ngModel]="featureFilter()"
+            (ngModelChange)="featureFilter.set($event)"
+            class="filter-select"
+          >
+            <option value="all">All Features</option>
+            <option value="must_have">Must-Have (MVP)</option>
+            <option value="should_have">Should-Have</option>
+            <option value="complex">High Complexity</option>
+          </select>
+
+          <!-- Sort -->
+          <select
+            [ngModel]="featureSort()"
+            (ngModelChange)="featureSort.set($event)"
+            class="filter-select"
+          >
+            <option value="cost">Sort by Cost (High to Low)</option>
+            <option value="hours">Sort by Hours</option>
+            <option value="name">Sort by Name</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Feature Name & Description</th>
+              <th>Complexity</th>
+              <th>Priority</th>
+              <th>Development Effort</th>
+              <th class="text-right">Estimated Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (f of displayedFeatures(); track f.id) {
+              <tr>
+                <td class="f-name-cell">
+                  <strong>{{ f.name }}</strong>
+                  <span class="f-sub-desc">{{ f.description }}</span>
+                </td>
+                <td>
+                  <span class="badge" [class.badge-orange]="f.complexity === 'complex'" [class.badge-neutral]="f.complexity !== 'complex'">
+                    {{ f.complexity | uppercase }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [class.badge-lavender]="f.priority === 'must_have'" [class.badge-neutral]="f.priority !== 'must_have'">
+                    {{ f.priority.replace('_', ' ') }}
+                  </span>
+                </td>
+                <td>
+                  <span class="effort-badge">{{ f.estimatedHours }} Hours</span>
+                </td>
+                <td class="text-right cost-cell">
+                  {{ rateCard.formatCurrency(f.estimatedCost, est.currency) }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Team Recommendations Table -->
+    <div class="team-card card">
+      <div class="card-header-row">
+        <div>
+          <h3 class="card-section-title">Recommended Engineering Squad</h3>
+          <p class="card-section-subtitle">
+            Specialized team composition with weekly allocations and responsibilities
+          </p>
+        </div>
+        <span class="badge badge-lavender">{{ est.team.length }} Engineering Roles</span>
+      </div>
+
+      <div class="team-grid">
+        @for (member of est.team; track member.role) {
+          <div class="team-role-card">
+            <div class="tr-top">
+              <span class="tr-role">{{ member.role }}</span>
+              <span class="tr-count">Qty: {{ member.count }}</span>
+            </div>
+            <div class="tr-meta">
+              <span>{{ member.involvementWeeks }} Weeks Active</span>
+              <span>&bull;</span>
+              <span>{{ rateCard.formatCurrency(member.monthlyRate, est.currency) }} / mo</span>
+            </div>
+            <ul class="tr-resp-list">
+              @for (resp of member.responsibilities; track resp) {
+                <li>
+                  <app-icon name="check" [size]="12" color="#16A34A" />
+                  <span>{{ resp }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Technology Stack Matrix -->
+    <div class="tech-card card">
+      <h3 class="card-section-title">Architectural Stack Specification</h3>
+      <div class="tech-spec-grid">
+        <div class="ts-box">
+          <span class="ts-lbl">Target Platform</span>
+          <span class="ts-val">{{ est.techStack.platform | uppercase }}</span>
+        </div>
+        <div class="ts-box">
+          <span class="ts-lbl">Frontend Architecture</span>
+          <span class="ts-val">{{ est.techStack.frontend }}</span>
+        </div>
+        <div class="ts-box">
+          <span class="ts-lbl">Backend Framework</span>
+          <span class="ts-val">{{ est.techStack.backend }}</span>
+        </div>
+        <div class="ts-box">
+          <span class="ts-lbl">Database Engine</span>
+          <span class="ts-val">{{ est.techStack.database }}</span>
+        </div>
+        <div class="ts-box">
+          <span class="ts-lbl">Authentication</span>
+          <span class="ts-val">{{ est.techStack.authentication }}</span>
+        </div>
+        <div class="ts-box">
+          <span class="ts-lbl">AI Architecture</span>
+          <span class="ts-val text-lavender">{{ est.techStack.aiRequirements.replace('_', ' ') | uppercase }}</span>
+        </div>
+        <div class="ts-box">
+          <span class="ts-lbl">Hosting / Cloud</span>
+          <span class="ts-val">{{ est.techStack.hosting }}</span>
+        </div>
+        <div class="ts-box">
+          <span class="ts-lbl">Third-Party APIs</span>
+          <span class="ts-val">{{ est.techStack.integrations.join(', ') || 'Standard Libraries' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assumptions & Regulatory Disclaimers -->
+    <div class="assumptions-card card-orange">
+      <div class="assumptions-header">
+        <app-icon name="shield-check" [size]="18" color="#EA580C" />
+        <h4>Estimation Assumptions & Legal Disclaimer</h4>
+      </div>
+      <ul class="assumptions-list">
+        @for (item of est.assumptions; track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+      <div class="disclaimer-callout-footer">
+        IMPORTANT: This estimate is an illustrative decision-support output based on deterministic rate-card algorithms. It is not an engineering quote, guaranteed commercial contract, or actual AI-generated code analysis. Always calibrate with a verified engineering Statement of Work (SOW).
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario Comparison Modal -->
+  @if (showCompareModal()) {
+    <div class="modal-backdrop" (click)="showCompareModal.set(false)">
+      <div class="modal-card modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3 class="modal-title">Strategic Scenarios Comparison</h3>
+            <p class="modal-subtitle">Compare budget, timeline, and feature scope side-by-side</p>
+          </div>
+          <button type="button" class="btn-close" (click)="showCompareModal.set(false)">
+            <app-icon name="x" [size]="18" />
+          </button>
+        </div>
+
+        <div class="scenarios-modal-table">
+          <div class="sm-row sm-head">
+            <span>Metric</span>
+            <span>Lean MVP</span>
+            <span class="text-orange">Startup Standard</span>
+            <span>Growth Ready</span>
+          </div>
+
+          <div class="sm-row">
+            <span>Target Budget</span>
+            @for (sc of est.scenarios; track sc.id) {
+              <span class="font-bold">{{ rateCard.formatCurrency(sc.budgetMin, est.currency) }} &ndash; {{ rateCard.formatCurrency(sc.budgetMax, est.currency) }}</span>
+            }
+          </div>
+
+          <div class="sm-row">
+            <span>Sprint Duration</span>
+            @for (sc of est.scenarios; track sc.id) {
+              <span>{{ sc.timelineWeeks }} Weeks</span>
+            }
+          </div>
+
+          <div class="sm-row">
+            <span>Total Hours</span>
+            @for (sc of est.scenarios; track sc.id) {
+              <span>{{ sc.totalHours }} Hours</span>
+            }
+          </div>
+
+          <div class="sm-row">
+            <span>Features Included</span>
+            @for (sc of est.scenarios; track sc.id) {
+              <span>{{ sc.includedFeaturesCount }} Modules</span>
+            }
+          </div>
+
+          <div class="sm-row">
+            <span>Scope Summary</span>
+            @for (sc of est.scenarios; track sc.id) {
+              <span class="text-small">{{ sc.scopeSummary }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="showCompareModal.set(false)">
+            Done Viewing
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}

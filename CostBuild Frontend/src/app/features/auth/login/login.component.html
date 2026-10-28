@@ -1,0 +1,131 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card card">
+    <div class="auth-header text-center">
+      <div class="logo-box">
+        <app-logo [linkTo]="'/'" size="lg" />
+      </div>
+      <h2 class="auth-title">Sign in to CostBuild AI</h2>
+      <p class="auth-subtitle">Know your software development cost before committing capital</p>
+
+      <!-- Demonstration Notice Banner -->
+      <div class="demo-badge-banner">
+        <app-icon name="info" [size]="14" color="#8B7CE8" />
+        <span>Demonstration Mode &bull; Any valid credentials sign in locally</span>
+      </div>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+      <!-- Email Field -->
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          placeholder="e.g. founder@company.com"
+        />
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <div class="form-error">Please provide a valid email format.</div>
+        }
+      </div>
+
+      <!-- Password Field with Show/Hide -->
+      <div class="form-group">
+        <div class="label-with-link">
+          <label class="form-label" for="password">Password</label>
+          <button type="button" class="forgot-link" (click)="showForgotModal.set(true)">
+            Forgot password?
+          </button>
+        </div>
+        <div class="password-input-wrap">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            class="form-control pr-10"
+            [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            placeholder="Enter your password"
+          />
+          <button type="button" class="toggle-eye" (click)="toggleShowPassword()" aria-label="Toggle password visibility">
+            <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="16" color="#78716C" />
+          </button>
+        </div>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <div class="form-error">Password must contain at least 6 characters.</div>
+        }
+      </div>
+
+      <!-- Remember Me -->
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="rememberMe" class="custom-checkbox" />
+          <span>Remember this session on this computer</span>
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary btn-lg w-full" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <app-icon name="refresh-cw" [size]="18" class="spin-icon" />
+          <span>Signing In...</span>
+        } @else {
+          <app-icon name="log-in" [size]="18" />
+          <span>Sign In to Workspace</span>
+        }
+      </button>
+
+      <!-- Instant Demo Login Button -->
+      <button
+        type="button"
+        class="btn btn-lavender btn-lg w-full mt-2"
+        (click)="loginWithDemo()"
+        [disabled]="isLoading()"
+      >
+        <app-icon name="sparkles" [size]="16" />
+        <span>One-Click Demo Account (Alex Vance)</span>
+      </button>
+
+      <!-- Registration link -->
+      <div class="auth-footer text-center">
+        <span>Don't have an account yet?</span>
+        <a routerLink="/register" class="register-link font-bold"> Create Account</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Simulated Forgot Password Modal -->
+@if (showForgotModal()) {
+  <div class="modal-backdrop" (click)="showForgotModal.set(false)">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="icon-wrap bg-soft-orange">
+          <app-icon name="info" [size]="20" color="#EA580C" />
+        </div>
+        <div>
+          <h3>Simulated Password Recovery</h3>
+          <p>Demonstration environment. Enter your email to simulate a reset token.</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <label class="form-label">Email Address</label>
+        <input
+          type="email"
+          [value]="resetEmail()"
+          (input)="resetEmail.set($any($event.target).value)"
+          class="form-control"
+          placeholder="your.email@example.com"
+        />
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="showForgotModal.set(false)">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" (click)="sendSimulatedReset()">Simulate Reset Link</button>
+      </div>
+    </div>
+  </div>
+}
+

@@ -1,0 +1,781 @@
+<div class="wizard-container">
+  <!-- Stepper Header -->
+  <div class="wizard-stepper card">
+    <div class="stepper-track">
+      <button
+        type="button"
+        class="step-item"
+        [class.active]="currentStep() === 1"
+        [class.completed]="currentStep() > 1"
+        (click)="goToStep(1)"
+      >
+        <div class="step-circle">
+          @if (currentStep() > 1) {
+            <app-icon name="check" [size]="14" />
+          } @else {
+            1
+          }
+        </div>
+        <span class="step-text">Overview</span>
+      </button>
+
+      <div class="step-line" [class.filled]="currentStep() > 1"></div>
+
+      <button
+        type="button"
+        class="step-item"
+        [class.active]="currentStep() === 2"
+        [class.completed]="currentStep() > 2"
+        (click)="goToStep(2)"
+      >
+        <div class="step-circle">
+          @if (currentStep() > 2) {
+            <app-icon name="check" [size]="14" />
+          } @else {
+            2
+          }
+        </div>
+        <span class="step-text">Features</span>
+      </button>
+
+      <div class="step-line" [class.filled]="currentStep() > 2"></div>
+
+      <button
+        type="button"
+        class="step-item"
+        [class.active]="currentStep() === 3"
+        [class.completed]="currentStep() > 3"
+        (click)="goToStep(3)"
+      >
+        <div class="step-circle">
+          @if (currentStep() > 3) {
+            <app-icon name="check" [size]="14" />
+          } @else {
+            3
+          }
+        </div>
+        <span class="step-text">Technology</span>
+      </button>
+
+      <div class="step-line" [class.filled]="currentStep() > 3"></div>
+
+      <button
+        type="button"
+        class="step-item"
+        [class.active]="currentStep() === 4"
+        [class.completed]="currentStep() > 4"
+        (click)="goToStep(4)"
+      >
+        <div class="step-circle">
+          @if (currentStep() > 4) {
+            <app-icon name="check" [size]="14" />
+          } @else {
+            4
+          }
+        </div>
+        <span class="step-text">Parameters</span>
+      </button>
+
+      <div class="step-line" [class.filled]="currentStep() > 4"></div>
+
+      <button
+        type="button"
+        class="step-item"
+        [class.active]="currentStep() === 5"
+        (click)="goToStep(5)"
+      >
+        <div class="step-circle">5</div>
+        <span class="step-text">Review & Generate</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Wizard Content Card -->
+  <div class="wizard-body card">
+    <!-- ================= STEP 1: OVERVIEW ================= -->
+    @if (currentStep() === 1) {
+      <div class="step-pane">
+        <div class="pane-header">
+          <span class="badge badge-orange">STEP 1 OF 5</span>
+          <h2 class="pane-title">Project Overview & Classification</h2>
+          <p class="pane-subtitle">Define what you are building and select starting template presets.</p>
+        </div>
+
+        <!-- Presets Row -->
+        <div class="presets-section">
+          <span class="presets-label">
+            <app-icon name="sparkles" [size]="14" color="#EA580C" />
+            Quick Presets (Click to autofill description):
+          </span>
+          <div class="presets-grid">
+            @for (ex of exampleProjects; track ex.title) {
+              <button type="button" class="preset-btn" (click)="applyExamplePreset(ex)">
+                <strong>{{ ex.title }}</strong>
+                <span>{{ ex.category }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <form [formGroup]="step1Form" class="step-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="p-name">Project Name</label>
+              <input
+                id="p-name"
+                type="text"
+                formControlName="projectName"
+                class="form-control"
+                [class.is-invalid]="step1Form.get('projectName')?.invalid && step1Form.get('projectName')?.touched"
+                placeholder="e.g. NextGen Telehealth Platform"
+              />
+              @if (step1Form.get('projectName')?.invalid && step1Form.get('projectName')?.touched) {
+                <div class="form-error">Project name must contain at least 3 characters.</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="p-category">Project Category</label>
+              <select id="p-category" formControlName="category" class="form-control">
+                <option value="SaaS Platform">SaaS Platform</option>
+                <option value="Mobile Application">Mobile Application (iOS / Android)</option>
+                <option value="Marketplace">Two-Sided Marketplace</option>
+                <option value="AI Application">AI Application (LLM / RAG)</option>
+                <option value="E-commerce">E-commerce Storefront</option>
+                <option value="Business Management System">Business Management System (ERP/CRM)</option>
+                <option value="Internal Enterprise Tool">Internal Enterprise Tool</option>
+                <option value="Portfolio or Marketing Website">Portfolio or Marketing Website</option>
+                <option value="Other">Other Custom Application</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="p-desc">Project Description & Core Scope</label>
+            <textarea
+              id="p-desc"
+              rows="4"
+              formControlName="description"
+              class="form-control textarea"
+              [class.is-invalid]="step1Form.get('description')?.invalid && step1Form.get('description')?.touched"
+              placeholder="Describe the problem, target user flow, and key functional expectations..."
+            ></textarea>
+            @if (step1Form.get('description')?.invalid && step1Form.get('description')?.touched) {
+              <div class="form-error">Please provide a descriptive explanation (at least 15 characters).</div>
+            }
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="p-aud">Target Audience</label>
+              <input
+                id="p-aud"
+                type="text"
+                formControlName="targetAudience"
+                class="form-control"
+                placeholder="e.g. B2B sales directors and recruiters"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="p-ind">Industry Domain</label>
+              <input
+                id="p-ind"
+                type="text"
+                formControlName="industry"
+                class="form-control"
+                placeholder="e.g. Healthcare / FinTech / Logistics"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="p-obj">Primary Project Objective</label>
+            <input
+              id="p-obj"
+              type="text"
+              formControlName="objective"
+              class="form-control"
+              placeholder="e.g. Launch an MVP to validate customer willingness to pay within 4 months."
+            />
+          </div>
+        </form>
+
+        <div class="pane-footer">
+          <div></div>
+          <button type="button" class="btn btn-primary" (click)="goToStep(2)">
+            Continue to Features
+            <app-icon name="arrow-right" [size]="16" />
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ================= STEP 2: REQUIREMENTS & FEATURES ================= -->
+    @if (currentStep() === 2) {
+      <div class="step-pane">
+        <div class="pane-header">
+          <span class="badge badge-orange">STEP 2 OF 5</span>
+          <h2 class="pane-title">Requirements & Feature Decomposition</h2>
+          <p class="pane-subtitle">
+            Configure capabilities with complexity ratings. Each rating directly influences sprint hours.
+          </p>
+        </div>
+
+        <!-- Metric Counter Bar -->
+        <div class="features-metric-bar">
+          <div class="f-metric">
+            <span class="f-val">{{ features().length }}</span>
+            <span class="f-lbl">Total Modules</span>
+          </div>
+          <div class="f-metric">
+            <span class="f-val text-orange">{{ mustHaveCount }}</span>
+            <span class="f-lbl">Must-Have (MVP)</span>
+          </div>
+          <div class="f-metric">
+            <span class="f-val text-lavender">{{ complexCount }}</span>
+            <span class="f-lbl">High Complexity</span>
+          </div>
+        </div>
+
+        <!-- Suggested Chips -->
+        <div class="suggested-chips-wrap">
+          <span class="sug-title">Click to add suggested modules:</span>
+          <div class="chips-flex">
+            @for (sug of suggestedFeatures; track sug.name) {
+              <button type="button" class="add-chip-btn" (click)="addSuggestedFeature(sug)">
+                <app-icon name="plus" [size]="12" />
+                {{ sug.name }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Add Custom Feature Box -->
+        <div class="add-feature-box card-lavender">
+          <h4 class="box-title">Add Custom Capability Module</h4>
+          <div class="form-row-2">
+            <input
+              type="text"
+              [value]="newFeatureName()"
+              (input)="newFeatureName.set($any($event.target).value)"
+              class="form-control"
+              placeholder="Feature title (e.g. Multi-Currency Wallet Payouts)"
+            />
+            <input
+              type="text"
+              [value]="newFeatureDesc()"
+              (input)="newFeatureDesc.set($any($event.target).value)"
+              class="form-control"
+              placeholder="Short description or technical scope"
+            />
+          </div>
+
+          <div class="feature-config-row">
+            <div class="select-field">
+              <label class="mini-label">Complexity</label>
+              <select
+                [value]="newFeatureComplexity()"
+                (change)="newFeatureComplexity.set($any($event.target).value)"
+                class="form-control select-sm"
+              >
+                <option value="simple">Simple (8–20h)</option>
+                <option value="medium">Medium (20–50h)</option>
+                <option value="complex">Complex (50–120h)</option>
+              </select>
+            </div>
+
+            <div class="select-field">
+              <label class="mini-label">Priority</label>
+              <select
+                [value]="newFeaturePriority()"
+                (change)="newFeaturePriority.set($any($event.target).value)"
+                class="form-control select-sm"
+              >
+                <option value="must_have">Must Have (MVP)</option>
+                <option value="should_have">Should Have</option>
+                <option value="nice_to_have">Nice to Have</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-sm ml-auto" (click)="addCustomFeature()">
+              <app-icon name="plus" [size]="15" />
+              Add Module
+            </button>
+          </div>
+        </div>
+
+        <!-- Features Table -->
+        <div class="features-list-card">
+          <h4 class="list-heading">Active Requirements ({{ features().length }})</h4>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Feature Name</th>
+                  <th>Complexity</th>
+                  <th>Priority</th>
+                  <th class="text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (f of features(); track f.id) {
+                  <tr>
+                    <td>
+                      <div class="f-cell">
+                        <strong>{{ f.name }}</strong>
+                        <span class="f-desc">{{ f.description }}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <select
+                        [value]="f.complexity"
+                        (change)="updateFeatureComplexity(f.id, $any($event.target).value)"
+                        class="table-select"
+                      >
+                        <option value="simple">Simple (about 4h)</option>
+                        <option value="medium">Medium (about 10h)</option>
+                        <option value="complex">Complex (about 22h)</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select
+                        [value]="f.priority"
+                        (change)="updateFeaturePriority(f.id, $any($event.target).value)"
+                        class="table-select"
+                      >
+                        <option value="must_have">Must Have</option>
+                        <option value="should_have">Should Have</option>
+                        <option value="nice_to_have">Nice to Have</option>
+                      </select>
+                    </td>
+                    <td class="text-right">
+                      <button type="button" class="btn-del-sm" (click)="removeFeature(f.id)" title="Remove module">
+                        <app-icon name="trash" [size]="15" color="#DC2626" />
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pane-footer">
+          <button type="button" class="btn btn-secondary" (click)="goToStep(1)">
+            <app-icon name="arrow-left" [size]="16" />
+            Back to Overview
+          </button>
+          <button type="button" class="btn btn-primary" (click)="goToStep(3)">
+            Continue to Technology
+            <app-icon name="arrow-right" [size]="16" />
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ================= STEP 3: TECHNICAL CONFIGURATION ================= -->
+    @if (currentStep() === 3) {
+      <div class="step-pane">
+        <div class="pane-header">
+          <span class="badge badge-orange">STEP 3 OF 5</span>
+          <h2 class="pane-title">Technical Configuration & Architecture</h2>
+          <p class="pane-subtitle">
+            Select platform deployment, frameworks, database engine, and AI integration level.
+          </p>
+        </div>
+
+        <form [formGroup]="step3Form" class="step-form">
+          <!-- Platform -->
+          <div class="form-group">
+            <label class="form-label">Platform Target</label>
+            <div class="radio-pill-grid">
+              <label class="radio-card" [class.selected]="step3Form.get('platform')?.value === 'web'">
+                <input type="radio" formControlName="platform" value="web" />
+                <div class="rc-content">
+                  <app-icon name="monitor" [size]="20" />
+                  <strong>Web Application</strong>
+                  <span>Standard browser responsive app (1.0x)</span>
+                </div>
+              </label>
+
+              <label class="radio-card" [class.selected]="step3Form.get('platform')?.value === 'mobile'">
+                <input type="radio" formControlName="platform" value="mobile" />
+                <div class="rc-content">
+                  <app-icon name="smartphone" [size]="20" />
+                  <strong>Mobile App (iOS/Android)</strong>
+                  <span>React Native, Flutter, or Native (1.25x)</span>
+                </div>
+              </label>
+
+              <label class="radio-card" [class.selected]="step3Form.get('platform')?.value === 'desktop'">
+                <input type="radio" formControlName="platform" value="desktop" />
+                <div class="rc-content">
+                  <app-icon name="cpu" [size]="20" />
+                  <strong>Desktop Client</strong>
+                  <span>Electron or Tauri desktop app (1.2x)</span>
+                </div>
+              </label>
+
+              <label class="radio-card" [class.selected]="step3Form.get('platform')?.value === 'multi_platform'">
+                <input type="radio" formControlName="platform" value="multi_platform" />
+                <div class="rc-content">
+                  <app-icon name="layers" [size]="20" />
+                  <strong>Multi-Platform Suite</strong>
+                  <span>Web, iOS, and Android unified (1.65x)</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Stacks -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="t-front">Frontend Framework</label>
+              <select id="t-front" formControlName="frontend" class="form-control">
+                <option value="Angular">Angular (Standalone & Signals)</option>
+                <option value="React">React (Next.js)</option>
+                <option value="Vue">Vue 3 (Nuxt)</option>
+                <option value="Flutter">Flutter (Cross-Platform Mobile)</option>
+                <option value="No preference">No preference (Architect Choice)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="t-back">Backend Framework</label>
+              <select id="t-back" formControlName="backend" class="form-control">
+                <option value="Node.js (NestJS)">Node.js (NestJS / Express)</option>
+                <option value="Spring Boot (Java)">Spring Boot (Java 21)</option>
+                <option value="Django / FastAPI (Python)">Django / FastAPI (Python)</option>
+                <option value="Go (Golang)">Go (Golang Microservices)</option>
+                <option value="Laravel (PHP)">Laravel (PHP)</option>
+                <option value="No preference">No preference</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="t-db">Database Engine</label>
+              <select id="t-db" formControlName="database" class="form-control">
+                <option value="PostgreSQL">PostgreSQL (Relational + JSONB)</option>
+                <option value="MySQL">MySQL / MariaDB</option>
+                <option value="MongoDB">MongoDB (Document Store)</option>
+                <option value="Firebase / Supabase">Firebase / Supabase (Serverless BaaS)</option>
+                <option value="Redis + PostgreSQL">Redis + PostgreSQL (High-Concurrency Cache)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="t-auth">Authentication Scheme</label>
+              <input
+                id="t-auth"
+                type="text"
+                formControlName="authentication"
+                class="form-control"
+                placeholder="e.g. Auth0, Firebase Auth, Custom JWT"
+              />
+            </div>
+          </div>
+
+          <!-- AI Integration Level -->
+          <div class="form-group">
+            <label class="form-label">AI / Machine Learning Capabilities</label>
+            <select formControlName="aiRequirements" class="form-control">
+              <option value="none">None (Standard Software Logic)</option>
+              <option value="basic_prompting">Basic Prompting & LLM Chat (about +8h, +₹1k setup)</option>
+              <option value="rag_fine_tuning">Retrieval-Augmented Generation (RAG) & Embeddings (about +20h, +₹3k setup)</option>
+              <option value="custom_ml_pipeline">Custom ML Model Training & Dedicated GPU Pipeline (about +45h, +₹8k setup)</option>
+            </select>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Integrations & External APIs</label>
+              <input
+                type="text"
+                formControlName="integrationsText"
+                class="form-control"
+                placeholder="e.g. Stripe, SendGrid, Twilio, Google Maps"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Hosting & Cloud Infrastructure</label>
+              <input
+                type="text"
+                formControlName="hosting"
+                class="form-control"
+                placeholder="e.g. AWS ECS / CloudFront, GCP, Vercel"
+              />
+            </div>
+          </div>
+        </form>
+
+        <div class="pane-footer">
+          <button type="button" class="btn btn-secondary" (click)="goToStep(2)">
+            <app-icon name="arrow-left" [size]="16" />
+            Back to Features
+          </button>
+          <button type="button" class="btn btn-primary" (click)="goToStep(4)">
+            Continue to Parameters
+            <app-icon name="arrow-right" [size]="16" />
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ================= STEP 4: PROJECT PARAMETERS ================= -->
+    @if (currentStep() === 4) {
+      <div class="step-pane">
+        <div class="pane-header">
+          <span class="badge badge-orange">STEP 4 OF 5</span>
+          <h2 class="pane-title">Project Parameters & Execution Model</h2>
+          <p class="pane-subtitle">
+            Configure regional rate cards, team structures, delivery urgency, and testing standards.
+          </p>
+        </div>
+
+        <form [formGroup]="step4Form" class="step-form">
+          <div class="form-row-2">
+            <!-- Region -->
+            <div class="form-group">
+              <label class="form-label" for="p-reg">Development Region Benchmark</label>
+              <select id="p-reg" formControlName="region" class="form-control">
+                <option value="india">India (Prevailing Market Index 1.0x)</option>
+                <option value="southeast_asia">Southeast Asia (1.25x)</option>
+                <option value="latam">Latin America (1.75x)</option>
+                <option value="eastern_europe">Eastern Europe (2.3x)</option>
+                <option value="western_europe">Western Europe (3.8x)</option>
+                <option value="us_canada">United States & Canada (4.5x)</option>
+              </select>
+              <span class="form-hint">Applies prevailing developer salary and agency blended hourly indexes.</span>
+            </div>
+
+            <!-- Hiring Model -->
+            <div class="form-group">
+              <label class="form-label" for="p-hire">Hiring & Resource Model</label>
+              <select id="p-hire" formControlName="hiringModel" class="form-control">
+                <option value="small_agency">Small Development Agency (₹{{ rateCard.getBaseHourlyRates().small_agency }}/hr base)</option>
+                <option value="established_agency">Established Agency (₹{{ rateCard.getBaseHourlyRates().established_agency }}/hr base)</option>
+                <option value="freelancer">Freelancer / Independent Contractor (₹{{ rateCard.getBaseHourlyRates().freelancer }}/hr base)</option>
+                <option value="in_house">In-House Engineering Team (₹{{ rateCard.getBaseHourlyRates().in_house }}/hr loaded)</option>
+                <option value="mixed">Mixed Hybrid Team (₹{{ rateCard.getBaseHourlyRates().mixed }}/hr)</option>
+              </select>
+              <span class="form-hint">Determines management overhead and concurrent engineering capacity.</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="p-budget">Maximum Project Budget (optional)</label>
+            <input
+              id="p-budget"
+              type="number"
+              min="0"
+              step="1000"
+              formControlName="targetBudget"
+              class="form-control"
+              placeholder="e.g. 75000"
+            />
+            <span class="form-hint">If the Startup Standard option exceeds this amount, the report suggests features to postpone.</span>
+          </div>
+
+          <div class="form-row-2">
+            <!-- Delivery Timeline / Urgency -->
+            <div class="form-group">
+              <label class="form-label" for="p-urg">Delivery Timeline & Urgency</label>
+              <select id="p-urg" formControlName="deliveryTimeline" class="form-control">
+                <option value="standard">Standard Agile Velocity (1.05x effort)</option>
+                <option value="flexible">Flexible / Relaxed Delivery (no urgency premium)</option>
+                <option value="urgent">Urgent / Fast-Track (1.15x effort)</option>
+              </select>
+              <span class="form-hint">Fast-track delivery requires concurrent engineers and overtime allocation.</span>
+            </div>
+
+            <!-- Testing Level -->
+            <div class="form-group">
+              <label class="form-label" for="p-test">Quality Assurance & Testing Level</label>
+              <select id="p-test" formControlName="testingLevel" class="form-control">
+                <option value="standard">Standard QA & Integration Tests (1.08x effort)</option>
+                <option value="basic">Basic Developer Testing & Smoke Tests (1.0x effort)</option>
+                <option value="automated_e2e">Automated E2E Test Suite (1.18x effort)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <!-- Design Complexity -->
+            <div class="form-group">
+              <label class="form-label">UI/UX Design Depth</label>
+              <select formControlName="designComplexity" class="form-control">
+                <option value="standard">Standard Clean UI & Design System (1.0x)</option>
+                <option value="minimal">Minimal / Functional UI (0.9x feature hours)</option>
+                <option value="premium_custom">Premium Custom UI (1.15x feature hours)</option>
+              </select>
+            </div>
+
+            <!-- Cloud Deployment -->
+            <div class="form-group">
+              <label class="form-label">Deployment Architecture</label>
+              <select formControlName="deploymentType" class="form-control">
+                <option value="standard_cloud">Standard Cloud (Docker / ECS / Cloud Run)</option>
+                <option value="serverless">Serverless Edge (Lambda / Cloudflare Workers)</option>
+                <option value="multi_region_k8s">Multi-Region Kubernetes (High-Availability High SLA)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Maintenance Checkbox -->
+          <div class="checkbox-group mt-2">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="maintenanceIncluded" class="custom-checkbox" />
+              <span>Include 6-month post-launch maintenance, bug warranty, and server monitoring reserve</span>
+            </label>
+          </div>
+        </form>
+
+        <div class="pane-footer">
+          <button type="button" class="btn btn-secondary" (click)="goToStep(3)">
+            <app-icon name="arrow-left" [size]="16" />
+            Back to Technology
+          </button>
+          <button type="button" class="btn btn-primary" (click)="goToStep(5)">
+            Review & Finalize
+            <app-icon name="arrow-right" [size]="16" />
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- ================= STEP 5: REVIEW & GENERATE ================= -->
+    @if (currentStep() === 5) {
+      <div class="step-pane">
+        <div class="pane-header">
+          <span class="badge badge-lavender">STEP 5 OF 5</span>
+          <h2 class="pane-title">Review Project Specifications & Generate Report</h2>
+          <p class="pane-subtitle">
+            Validate all parameters before executing the deterministic calculation engine.
+          </p>
+        </div>
+
+        <div class="review-layout">
+          <!-- Summary Cards Left -->
+          <div class="review-main">
+            <!-- Section 1 Summary -->
+            <div class="review-section-box card">
+              <div class="rev-sec-header">
+                <h4>Project Scope & Classification</h4>
+                <button type="button" class="edit-link-btn" (click)="goToStep(1)">
+                  <app-icon name="edit" [size]="14" /> Edit
+                </button>
+              </div>
+              <div class="rev-grid-2">
+                <div>
+                  <span class="rev-lbl">Project Name:</span>
+                  <span class="rev-val">{{ step1Form.get('projectName')?.value }}</span>
+                </div>
+                <div>
+                  <span class="rev-lbl">Category:</span>
+                  <span class="rev-val">{{ step1Form.get('category')?.value }}</span>
+                </div>
+              </div>
+              <p class="rev-desc">{{ step1Form.get('description')?.value }}</p>
+            </div>
+
+            <!-- Section 2 Summary -->
+            <div class="review-section-box card">
+              <div class="rev-sec-header">
+                <h4>Configured Features ({{ features().length }} modules)</h4>
+                <button type="button" class="edit-link-btn" (click)="goToStep(2)">
+                  <app-icon name="edit" [size]="14" /> Edit
+                </button>
+              </div>
+              <div class="rev-chips-wrap">
+                @for (f of features(); track f.id) {
+                  <span class="rev-feat-chip" [class.must-have]="f.priority === 'must_have'">
+                    {{ f.name }} ({{ f.complexity }})
+                  </span>
+                }
+              </div>
+            </div>
+
+            <!-- Section 3 & 4 Summary -->
+            <div class="review-section-box card">
+              <div class="rev-sec-header">
+                <h4>Architecture & Regional Parameters</h4>
+                <button type="button" class="edit-link-btn" (click)="goToStep(3)">
+                  <app-icon name="edit" [size]="14" /> Edit
+                </button>
+              </div>
+              <div class="rev-grid-2">
+                <div>
+                  <span class="rev-lbl">Platform Target:</span>
+                  <span class="rev-val text-capitalize">{{ step3Form.get('platform')?.value }}</span>
+                </div>
+                <div>
+                  <span class="rev-lbl">Stack:</span>
+                  <span class="rev-val">{{ step3Form.get('frontend')?.value }} + {{ step3Form.get('backend')?.value }}</span>
+                </div>
+                <div>
+                  <span class="rev-lbl">Benchmark Region:</span>
+                  <span class="rev-val text-capitalize">{{ step4Form.get('region')?.value }}</span>
+                </div>
+                <div>
+                  <span class="rev-lbl">Hiring Structure:</span>
+                  <span class="rev-val text-capitalize">{{ step4Form.get('hiringModel')?.value.replace('_', ' ') }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Generation CTA Sidebar Right -->
+          <div class="review-sidebar">
+            <div class="gen-callout-card card-orange">
+              <span class="badge badge-orange mb-2">READY TO CALCULATE</span>
+              <h3>Generate Complete Report</h3>
+              <p>
+                Calculates auditable phase hours, realistic sprint timelines, team headcount, and 3 strategic scenarios.
+              </p>
+
+              <button
+                type="button"
+                class="btn btn-primary btn-lg w-full"
+                (click)="generateEstimate()"
+                [disabled]="isGenerating()"
+              >
+                <app-icon name="sparkles" [size]="18" />
+                Generate My Estimate
+              </button>
+
+              <span class="sidebar-disclaimer">
+                Output is illustrative decision support &bull; Automatically saved to workspace
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pane-footer">
+          <button type="button" class="btn btn-secondary" (click)="goToStep(4)">
+            <app-icon name="arrow-left" [size]="16" />
+            Back to Parameters
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Rotating Loading Modal Overlay -->
+@if (isGenerating()) {
+  <div class="generating-overlay">
+    <div class="generating-card card">
+      <div class="gen-spinner-ring"></div>
+      <app-icon name="sparkles" [size]="28" color="#EA580C" class="gen-icon" />
+      <h3 class="gen-title">CostBuild AI Engine Active</h3>
+      <p class="gen-step-msg">{{ generatingStepMessage() }}</p>
+      <div class="gen-progress-track">
+        <div class="gen-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+}

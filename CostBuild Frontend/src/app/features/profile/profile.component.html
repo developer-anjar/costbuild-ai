@@ -1,0 +1,79 @@
+<div class="profile-page">
+  <div class="profile-header">
+    <h1 class="page-title">User Profile</h1>
+    <p class="page-subtitle">Manage your account identity, role credentials, and organization profile.</p>
+  </div>
+
+  <div class="profile-layout">
+    <div class="profile-card card">
+      <!-- Avatar Header -->
+      <div class="avatar-banner">
+        <div class="big-avatar">
+          {{ name().charAt(0) || 'U' }}
+        </div>
+        <div>
+          <h2 class="user-heading">{{ name() || 'User Profile' }}</h2>
+          <span class="badge badge-lavender">{{ role() }} &bull; {{ organization() || 'No Organization' }}</span>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input
+            type="text"
+            [ngModel]="name()"
+            (ngModelChange)="name.set($event)"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input
+            type="email"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label">Professional Role</label>
+          <select
+            [ngModel]="role()"
+            (ngModelChange)="role.set($event)"
+            class="form-control"
+          >
+            @for (r of roles; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Organization / Studio Name</label>
+          <input
+            type="text"
+            [ngModel]="organization()"
+            (ngModelChange)="organization.set($event)"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="profile-actions-row">
+        <button type="button" class="btn btn-primary btn-sm" (click)="saveProfile()">
+          Save Profile Changes
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="logout()">
+          <app-icon name="log-out" [size]="15" />
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

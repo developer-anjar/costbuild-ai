@@ -1,0 +1,293 @@
+<div class="dashboard-container">
+  <!-- Top Welcome Bar -->
+  <div class="welcome-bar">
+    <div>
+      <h1 class="greeting-text">{{ greeting() }}</h1>
+      <p class="greeting-sub">Here is your workspace overview and active software estimation portfolio.</p>
+    </div>
+    <div class="welcome-actions">
+      <a routerLink="/app/new-estimate" class="btn btn-primary">
+        <app-icon name="plus" [size]="16" />
+        New Estimate
+      </a>
+      <a routerLink="/app/projects" class="btn btn-secondary">
+        <app-icon name="folder-kanban" [size]="16" />
+        Tracked Projects
+      </a>
+    </div>
+  </div>
+
+  <!-- 4 Data-Driven Metric Cards -->
+  <div class="metrics-grid">
+    <app-metric-card
+      label="Total Estimates"
+      [value]="totalEstimates().toString()"
+      subtext="Stored in local workspace"
+      icon="calculator"
+      iconBg="orange"
+      [trend]="{ value: '+2 this month', positive: true }"
+    />
+
+    <app-metric-card
+      label="Saved Projects"
+      [value]="totalProjects().toString()"
+      subtext="Actively tracked execution"
+      icon="folder-kanban"
+      iconBg="lavender"
+      badge="Active"
+    />
+
+    <app-metric-card
+      label="Average Budget"
+      [value]="rateCard.formatCurrency(averageBudget(), 'INR')"
+      subtext="Across all portfolio models"
+      icon="dollar-sign"
+      iconBg="green"
+    />
+
+    <app-metric-card
+      label="Benchmark Engine"
+      value="v2.5"
+      subtext="Deterministic rate calibrated"
+      icon="cpu"
+      iconBg="neutral"
+      badge="Online"
+    />
+  </div>
+
+  <!-- Middle Row: Interactive Real-Time Chart & Quick Insights -->
+  <div class="dashboard-middle-grid">
+    <!-- Real-time Chart Card -->
+    <div class="chart-card card">
+      <div class="card-header-row">
+        <div>
+          <h3 class="card-title">Portfolio Budget Distribution</h3>
+          <p class="card-subtitle">Calculated baseline budgets across your saved estimates</p>
+        </div>
+        <span class="badge badge-orange">Live Local Data</span>
+      </div>
+
+      @if (totalEstimates() > 0) {
+        <div class="canvas-height">
+          <canvas #budgetChartCanvas></canvas>
+        </div>
+      } @else {
+        <div class="empty-chart-notice">
+          <p>No estimates available to graph. Create your first estimate to populate analytics.</p>
+        </div>
+      }
+    </div>
+
+    <!-- Quick Architectural Guidance Card (Lavender) -->
+    <div class="insights-card card-lavender">
+      <div class="insights-top">
+        <span class="badge badge-lavender">
+          <app-icon name="sparkles" [size]="13" />
+          SYSTEM RECOMMENDATIONS
+        </span>
+      </div>
+      <h3 class="insights-title">Optimizing Initial Capital Velocity</h3>
+      <p class="insights-copy">
+        When planning initial MVPs, prioritize decoupling third-party billing from core domain state. Phasing secondary webhooks into Sprint 2 typically shortens time-to-market by 25%.
+      </p>
+
+      <div class="insights-checklist">
+        <div class="check-item">
+          <app-icon name="check-circle" [size]="15" color="#8B7CE8" />
+          <span>Calibrate hourly benchmarks with regional market conditions</span>
+        </div>
+        <div class="check-item">
+          <app-icon name="check-circle" [size]="15" color="#8B7CE8" />
+          <span>Maintain 15% contingency for architectural discovery</span>
+        </div>
+        <div class="check-item">
+          <app-icon name="check-circle" [size]="15" color="#8B7CE8" />
+          <span>Validate third-party API rate quotas prior to contracting</span>
+        </div>
+      </div>
+
+      <div class="mt-auto pt-3">
+        <a routerLink="/app/new-estimate" class="btn btn-sm btn-lavender w-full">
+          Launch New Estimate Wizard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estimates Table Section -->
+  <div class="estimates-table-section card">
+    <!-- Filter Toolbar -->
+    <div class="table-toolbar">
+      <div class="toolbar-left">
+        <h3 class="toolbar-title">Estimation Portfolio</h3>
+        <span class="badge badge-neutral">{{ filteredEstimates().length }} Records</span>
+      </div>
+
+      <div class="toolbar-controls">
+        <!-- Search -->
+        <div class="search-input-wrap">
+          <app-icon name="search" [size]="16" color="#A8A29E" class="search-icon" />
+          <input
+            type="text"
+            placeholder="Search estimates..."
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+            class="search-input"
+          />
+        </div>
+
+        <!-- Category Dropdown -->
+        <select
+          [ngModel]="categoryFilter()"
+          (ngModelChange)="categoryFilter.set($event)"
+          class="filter-select"
+        >
+          <option value="all">All Categories</option>
+          <option value="Mobile Application">Mobile Application</option>
+          <option value="SaaS Platform">SaaS Platform</option>
+          <option value="Marketplace">Marketplace</option>
+          <option value="AI Application">AI Application</option>
+          <option value="Business Management System">Business Management System</option>
+          <option value="Portfolio or Marketing Website">Portfolio Website</option>
+        </select>
+
+        <!-- Sort By -->
+        <select
+          [ngModel]="sortBy()"
+          (ngModelChange)="sortBy.set($event)"
+          class="filter-select"
+        >
+          <option value="date">Sort by Date</option>
+          <option value="budget">Sort by Budget</option>
+          <option value="name">Sort by Name</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    @if (filteredEstimates().length > 0) {
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Project Name</th>
+              <th>Category</th>
+              <th>Estimated Budget</th>
+              <th>Timeline</th>
+              <th>Features</th>
+              <th>Updated</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (est of filteredEstimates(); track est.id) {
+              <tr class="table-row-item">
+                <td class="name-cell">
+                  <div class="project-info">
+                    <span class="p-name" (click)="viewEstimate(est.id)">{{ est.projectName }}</span>
+                    @if (est.isSample) {
+                      <span class="sample-tag">Demo Sample</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-neutral">{{ est.category }}</span>
+                </td>
+                <td class="budget-cell">
+                  <span class="budget-amount text-orange">
+                    {{ rateCard.formatCurrency(est.totalBudget, est.currency) }}
+                  </span>
+                  <span class="budget-range-sub">
+                    {{ rateCard.formatCurrency(est.budgetRange.min, est.currency) }} &ndash; {{ rateCard.formatCurrency(est.budgetRange.max, est.currency) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="timeline-badge">
+                    <app-icon name="clock" [size]="13" color="#78716C" />
+                    <span>{{ est.timelineWeeks }} Weeks</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="feature-count-badge">{{ est.features.length }} modules</span>
+                </td>
+                <td class="date-cell">
+                  {{ est.updatedAt | date:'mediumDate' }}
+                </td>
+                <td class="actions-cell text-right">
+                  <div class="action-buttons-group">
+                    <button
+                      type="button"
+                      class="act-btn"
+                      title="Open Report"
+                      (click)="viewEstimate(est.id)"
+                    >
+                      <app-icon name="eye" [size]="16" color="#F97316" />
+                    </button>
+
+                    <button
+                      type="button"
+                      class="act-btn"
+                      title="Edit in Wizard"
+                      (click)="editEstimate(est)"
+                    >
+                      <app-icon name="edit" [size]="16" color="#78716C" />
+                    </button>
+
+                    <button
+                      type="button"
+                      class="act-btn"
+                      title="Duplicate"
+                      (click)="duplicateEstimate(est.id)"
+                    >
+                      <app-icon name="copy" [size]="16" color="#78716C" />
+                    </button>
+
+                    <button
+                      type="button"
+                      class="act-btn"
+                      title="Track as Project"
+                      (click)="trackAsProject(est)"
+                    >
+                      <app-icon name="folder-kanban" [size]="16" color="#8B7CE8" />
+                    </button>
+
+                    <button
+                      type="button"
+                      class="act-btn btn-del"
+                      title="Delete"
+                      (click)="promptDelete(est)"
+                    >
+                      <app-icon name="trash" [size]="16" color="#DC2626" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="p-4">
+        <app-empty-state
+          icon="file-text"
+          title="No estimates found"
+          description="Try clearing your search filters, or build a new software estimate using our 5-step engine."
+          actionText="Create New Estimate"
+          (actionClicked)="router.navigate(['/app/new-estimate'])"
+        />
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<app-confirmation-dialog
+  [isOpen]="isConfirmOpen()"
+  title="Delete Estimate"
+  [message]="'Are you sure you want to delete estimate &quot;' + (estimateToDelete()?.projectName || '') + '&quot;? This cannot be undone.'"
+  confirmText="Delete Estimate"
+  [isDanger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/>
+

@@ -1,0 +1,726 @@
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="hero-container">
+    <!-- Left Hero Column -->
+    <div class="hero-left">
+      <div class="hero-badge">
+        <app-icon name="sparkles" [size]="14" color="#EA580C" />
+        <span>AI-POWERED SOFTWARE COST ESTIMATION</span>
+      </div>
+
+      <h1 class="hero-headline">
+        Know Your Software Cost <span class="text-orange">Before You Build.</span>
+      </h1>
+
+      <p class="hero-copy">
+        Turn your idea into a clear development budget, realistic timeline, and actionable project plan. Get a structured estimate before committing your time and money.
+      </p>
+
+      <div class="hero-ctas">
+        <a routerLink="/app/new-estimate" class="btn btn-primary btn-lg">
+          <app-icon name="calculator" [size]="18" />
+          Estimate My Project
+        </a>
+        <a routerLink="/how-it-works" class="btn btn-secondary btn-lg">
+          <app-icon name="arrow-right" [size]="18" />
+          See How It Works
+        </a>
+      </div>
+
+      <div class="hero-trust">
+        <div class="trust-icons">
+          <div class="trust-dot"></div>
+          <span class="trust-text">Designed for founders, startups, agencies, and independent developers.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Hero Column: Realistic Angular Dashboard Preview -->
+    <div class="hero-right">
+      <div class="dashboard-preview-card">
+        <!-- Preview Top Bar -->
+        <div class="preview-top-bar">
+          <div class="window-controls">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="preview-url-bar">
+            <span>costbuild.ai/app/estimates/est_food_delivery</span>
+          </div>
+          <span class="badge badge-success">Illustrative Preview</span>
+        </div>
+
+        <!-- Preview Body -->
+        <div class="preview-body">
+          <div class="preview-header">
+            <div>
+              <span class="p-category">MOBILE & WEB APP &bull; ON-DEMAND</span>
+              <h3 class="p-title">Food Delivery Platform</h3>
+            </div>
+            <div class="p-confidence">
+              <span class="conf-num">89%</span>
+              <span class="conf-lbl">Confidence</span>
+            </div>
+          </div>
+
+          <!-- Preview Metrics Grid -->
+          <div class="preview-metrics">
+            <div class="pm-card">
+              <span class="pm-lbl">Estimated Budget</span>
+              <span class="pm-val text-orange">₹28,50,000</span>
+              <span class="pm-sub">Range: ₹24.2L &ndash; ₹34.2L</span>
+            </div>
+            <div class="pm-card">
+              <span class="pm-lbl">Development Timeline</span>
+              <span class="pm-val">14 Weeks</span>
+              <span class="pm-sub">7 Agile Sprints</span>
+            </div>
+            <div class="pm-card">
+              <span class="pm-lbl">Team Structure</span>
+              <span class="pm-val">4 Engineers</span>
+              <span class="pm-sub">1 UI/UX, 1 QA</span>
+            </div>
+          </div>
+
+          <!-- Preview Lavender AI Card -->
+          <div class="preview-ai-card">
+            <div class="preview-ai-header">
+              <app-icon name="sparkles" [size]="14" color="#8B7CE8" />
+              <span>AI ARCHITECT INSIGHT:</span>
+            </div>
+            <p class="preview-ai-text">
+              Real-time driver GPS tracking and multi-vendor escrow payouts represent 42% of core sprint effort. Recommending phased driver MVP rollout first.
+            </p>
+          </div>
+
+          <!-- Technology Chips in Preview -->
+          <div class="preview-tech-chips">
+            <span class="tech-chip">Angular & Ionic</span>
+            <span class="tech-chip">Node.js (NestJS)</span>
+            <span class="tech-chip">PostgreSQL & Redis</span>
+            <span class="tech-chip">AWS ECS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM VS SOLUTION SECTION -->
+<section class="section-py bg-secondary">
+  <div class="content-container">
+    <div class="section-title-wrap text-center">
+      <span class="badge badge-orange">THE CHALLENGE</span>
+      <h2 class="section-headline">Why 68% of Software Projects Exceed Budget</h2>
+      <p class="section-subcopy">
+        Traditional software scoping relies on guesswork, vague proposals, and missing technical requirements.
+      </p>
+    </div>
+
+    <div class="problems-grid">
+      <div class="problem-card card">
+        <div class="prob-icon-box bg-soft-orange">
+          <app-icon name="alert-triangle" [size]="24" color="#EA580C" />
+        </div>
+        <h3>Unclear & Opaque Costs</h3>
+        <p>
+          Agencies quote drastically different amounts for the exact same idea. Founders lack objective benchmarks to know whether a quote of ₹10 Lakhs or ₹40 Lakhs is fair.
+        </p>
+      </div>
+
+      <div class="problem-card card">
+        <div class="prob-icon-box bg-soft-orange">
+          <app-icon name="clock" [size]="24" color="#EA580C" />
+        </div>
+        <h3>Unpredictable Timelines</h3>
+        <p>
+          Projects promised in 2 months drag on for 8 months because concurrency, QA testing cycles, and third-party API dependencies were never mapped upfront.
+        </p>
+      </div>
+
+      <div class="problem-card card">
+        <div class="prob-icon-box bg-soft-orange">
+          <app-icon name="layers" [size]="24" color="#EA580C" />
+        </div>
+        <h3>Hidden Requirements & Creep</h3>
+        <p>
+          Overlooked operational expenses—such as third-party authentication tokens, CI/CD pipelines, staging environments, and monitoring—lead to budget shocks.
+        </p>
+      </div>
+    </div>
+
+    <!-- The Solution Banner -->
+    <div class="solution-banner card-lavender">
+      <div class="solution-content">
+        <div class="sol-badge">
+          <app-icon name="sparkles" [size]="16" color="#8B7CE8" />
+          <span>OUR SOLUTION</span>
+        </div>
+        <h3>Predictable, Algorithmic Engineering Planning</h3>
+        <p>
+          CostBuild AI decomposes software into modular capabilities, applies region-specific engineering rate cards, calculates concurrency-adjusted timelines, and generates 3 strategic execution scenarios before you write code.
+        </p>
+      </div>
+      <div class="solution-cta">
+        <a routerLink="/app/new-estimate" class="btn btn-primary">Try CostBuild AI Free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THREE-STEP WORKFLOW -->
+<section class="section-py bg-white">
+  <div class="content-container">
+    <div class="section-title-wrap text-center">
+      <span class="badge badge-lavender">HOW IT WORKS</span>
+      <h2 class="section-headline">From Idea to Detailed Budget in 3 Minutes</h2>
+      <p class="section-subcopy">
+        A structured, wizard-guided assessment calibrated to modern software engineering best practices.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card card">
+        <div class="step-number">01</div>
+        <h3>Describe Your Idea</h3>
+        <p>
+          Select your category (SaaS, Mobile App, AI, Marketplace) and define your target audience, industry, and core project vision.
+        </p>
+        <span class="step-tag">Step 1: Project Overview</span>
+      </div>
+
+      <div class="step-card card">
+        <div class="step-number">02</div>
+        <h3>Configure Requirements</h3>
+        <p>
+          Select from pre-populated feature modules, adjust complexity levels, select tech stack preferences, and set regional hiring parameters.
+        </p>
+        <span class="step-tag">Steps 2 to 4: Architecture</span>
+      </div>
+
+      <div class="step-card card">
+        <div class="step-number">03</div>
+        <h3>Get Your Estimate</h3>
+        <p>
+          Receive a structured decision-support report with budget ranges, sprint roadmaps, team composition, AI risk insights, and printable exports.
+        </p>
+        <span class="step-tag">Step 5: Actionable Report</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIX CORE CAPABILITIES -->
+<section class="section-py bg-main">
+  <div class="content-container">
+    <div class="section-title-wrap text-center">
+      <span class="badge badge-orange">PLATFORM FEATURES</span>
+      <h2 class="section-headline">Comprehensive Architecture & Budgeting Engine</h2>
+      <p class="section-subcopy">
+        Every tool required to evaluate, negotiate, and budget custom software development.
+      </p>
+    </div>
+
+    <div class="features-six-grid">
+      <div class="feature-card card">
+        <div class="feat-icon bg-soft-orange">
+          <app-icon name="sparkles" [size]="20" color="#EA580C" />
+        </div>
+        <h4>AI Requirement Analysis</h4>
+        <p>Automated decomposition of project scopes into granular modules with complexity ratings and dependencies.</p>
+      </div>
+
+      <div class="feature-card card">
+        <div class="feat-icon bg-lavender">
+          <app-icon name="calculator" [size]="20" color="#8B7CE8" />
+        </div>
+        <h4>Deterministic Cost Breakdown</h4>
+        <p>Auditable formulas considering labor, QA, infrastructure, and contingency buffers based on market rate cards.</p>
+      </div>
+
+      <div class="feature-card card">
+        <div class="feat-icon bg-soft-orange">
+          <app-icon name="clock" [size]="20" color="#EA580C" />
+        </div>
+        <h4>Timeline & Team Estimation</h4>
+        <p>Concurrency-adjusted sprint planning calculating the exact engineering roles required across each week.</p>
+      </div>
+
+      <div class="feature-card card">
+        <div class="feat-icon bg-lavender">
+          <app-icon name="cpu" [size]="20" color="#8B7CE8" />
+        </div>
+        <h4>Technology Recommendations</h4>
+        <p>Tailored tech stack guidance for frontend, backend, database, and cloud infrastructure based on scale.</p>
+      </div>
+
+      <div class="feature-card card">
+        <div class="feat-icon bg-soft-orange">
+          <app-icon name="sliders" [size]="20" color="#EA580C" />
+        </div>
+        <h4>MVP vs Full Product Scenarios</h4>
+        <p>Compare Lean MVP, Startup Standard, and Growth Ready options with clear trade-offs.</p>
+      </div>
+
+      <div class="feature-card card">
+        <div class="feat-icon bg-lavender">
+          <app-icon name="file-text" [size]="20" color="#8B7CE8" />
+        </div>
+        <h4>Exportable & Printable Reports</h4>
+        <p>Printable PDF format, browser print-ready layouts, and JSON export for investor decks and RFP proposals.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCTIONAL INTERACTIVE SAMPLE ESTIMATOR -->
+<section class="section-py bg-white">
+  <div class="content-container">
+    <div class="estimator-container card">
+      <div class="estimator-header">
+        <span class="badge badge-orange">INTERACTIVE SAMPLE ESTIMATOR</span>
+        <h2 class="estimator-title">Test Your Software Numbers Right Now</h2>
+        <p class="estimator-subtitle">
+          Adjust the parameters below to view real-time illustrative estimates, then pass them directly into the full 5-step wizard.
+        </p>
+      </div>
+
+      <div class="estimator-grid">
+        <!-- Controls Left -->
+        <div class="estimator-controls">
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label">Project Type</label>
+            <div class="pill-group">
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleCategory() === 'Mobile Application'"
+                (click)="sampleCategory.set('Mobile Application')"
+              >Mobile App</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleCategory() === 'SaaS Platform'"
+                (click)="sampleCategory.set('SaaS Platform')"
+              >SaaS Platform</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleCategory() === 'Marketplace'"
+                (click)="sampleCategory.set('Marketplace')"
+              >Marketplace</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleCategory() === 'AI Application'"
+                (click)="sampleCategory.set('AI Application')"
+              >AI Application</button>
+            </div>
+          </div>
+
+          <!-- Complexity -->
+          <div class="form-group">
+            <label class="form-label">Feature Complexity</label>
+            <div class="pill-group">
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleComplexity() === 'simple'"
+                (click)="sampleComplexity.set('simple')"
+              >Simple (4h/feature)</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleComplexity() === 'medium'"
+                (click)="sampleComplexity.set('medium')"
+              >Medium (10h/feature)</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleComplexity() === 'complex'"
+                (click)="sampleComplexity.set('complex')"
+              >Complex (22h/feature)</button>
+            </div>
+          </div>
+
+          <!-- Feature Count Slider -->
+          <div class="form-group">
+            <div class="slider-label-row">
+              <label class="form-label">Estimated Feature Modules</label>
+              <span class="slider-badge">{{ sampleFeatureCount() }} Features</span>
+            </div>
+            <input
+              type="range"
+              min="3"
+              max="20"
+              step="1"
+              [value]="sampleFeatureCount()"
+              (input)="sampleFeatureCount.set(+$any($event.target).value)"
+              class="w-full"
+            />
+          </div>
+
+          <!-- Region Selection -->
+          <div class="form-group">
+            <label class="form-label">Development Region Benchmark</label>
+            <div class="pill-group">
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleRegion() === 'india'"
+                (click)="sampleRegion.set('india')"
+              >India</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleRegion() === 'eastern_europe'"
+                (click)="sampleRegion.set('eastern_europe')"
+              >Eastern Europe</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleRegion() === 'western_europe'"
+                (click)="sampleRegion.set('western_europe')"
+              >Western Europe</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleRegion() === 'us_canada'"
+                (click)="sampleRegion.set('us_canada')"
+              >US & Canada</button>
+            </div>
+          </div>
+
+          <!-- Scope -->
+          <div class="form-group">
+            <label class="form-label">Target Release Scope</label>
+            <div class="pill-group">
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleScope() === 'mvp'"
+                (click)="sampleScope.set('mvp')"
+              >Lean MVP Scope (-40% time)</button>
+              <button
+                type="button"
+                class="pill-btn"
+                [class.active]="sampleScope() === 'full'"
+                (click)="sampleScope.set('full')"
+              >Full Product Scope</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Card Right -->
+        <div class="estimator-result-card card-orange">
+          <div class="result-top">
+            <span class="badge badge-orange">CALCULATED ESTIMATE</span>
+            <span class="est-disclaimer">Illustrative Benchmark</span>
+          </div>
+
+          <div class="result-pricing">
+            <span class="res-label">Estimated Budget</span>
+            <h3 class="res-price">{{ rateCard.formatCurrency(sampleEstimate().totalBudget, 'INR') }}</h3>
+            <span class="res-range">
+              Variance: {{ rateCard.formatCurrency(sampleEstimate().minBudget, 'INR') }} &ndash; {{ rateCard.formatCurrency(sampleEstimate().maxBudget, 'INR') }}
+            </span>
+          </div>
+
+          <div class="result-stats">
+            <div class="r-stat">
+              <app-icon name="clock" [size]="16" color="#EA580C" />
+              <div>
+                <span class="stat-num">{{ sampleEstimate().weeks }} Weeks</span>
+                <span class="stat-lbl">Timeline</span>
+              </div>
+            </div>
+            <div class="r-stat">
+              <app-icon name="code" [size]="16" color="#EA580C" />
+              <div>
+                <span class="stat-num">{{ sampleEstimate().totalHours }} Hours</span>
+                <span class="stat-lbl">Engineering Effort</span>
+              </div>
+            </div>
+            <div class="r-stat">
+              <app-icon name="users" [size]="16" color="#EA580C" />
+              <div>
+                <span class="stat-num">{{ sampleEstimate().teamSize }} Roles</span>
+                <span class="stat-lbl">Recommended Team</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-note">
+            Includes development, testing, architectural planning, and 15% contingency reserve.
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-lg w-full"
+            (click)="transferToFullWizard()"
+          >
+            Pass Into 5-Step Wizard
+            <app-icon name="arrow-right" [size]="16" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE: ILLUSTRATIVE FOOD DELIVERY REPORT -->
+<section class="section-py bg-secondary">
+  <div class="content-container">
+    <div class="section-title-wrap text-center">
+      <span class="badge badge-lavender">CASE STUDY SPOTLIGHT</span>
+      <h2 class="section-headline">Illustrative Food Delivery Platform Report</h2>
+      <p class="section-subcopy">
+        See how a complex three-sided marketplace is analyzed into granular cost drivers and sprints.
+      </p>
+    </div>
+
+    <div class="showcase-card card">
+      <div class="showcase-header">
+        <div class="showcase-title-area">
+          <span class="badge badge-orange">Sample Benchmark Report</span>
+          <h3>Food Delivery Platform</h3>
+          <p>Real-time courier GPS routing, restaurant menu portal, and commission escrow split engine.</p>
+        </div>
+        <a routerLink="/app/estimates/est_food_delivery" class="btn btn-primary btn-sm">
+          <app-icon name="eye" [size]="15" />
+          Open Full Interactive Report
+        </a>
+      </div>
+
+      <div class="showcase-metrics-bar">
+        <div class="sc-metric">
+          <span class="sc-lbl">Calculated Budget</span>
+          <span class="sc-val text-orange">₹28,50,000</span>
+        </div>
+        <div class="sc-metric">
+          <span class="sc-lbl">Sprint Duration</span>
+          <span class="sc-val">14 Weeks</span>
+        </div>
+        <div class="sc-metric">
+          <span class="sc-lbl">Engineering Hours</span>
+          <span class="sc-val">1,120 Hours</span>
+        </div>
+        <div class="sc-metric">
+          <span class="sc-lbl">Confidence Score</span>
+          <span class="sc-val text-lavender">89%</span>
+        </div>
+      </div>
+
+      <!-- Feature Cost Breakdown Sample -->
+      <div class="showcase-features-table">
+        <div class="table-header">
+          <span>Feature Module</span>
+          <span>Complexity</span>
+          <span>Hours</span>
+          <span>Budget Allocation</span>
+        </div>
+        <div class="table-row">
+          <span>Real-time GPS Driver Tracking (WebSockets)</span>
+          <span class="badge badge-orange">Complex</span>
+          <span>150h</span>
+          <span class="row-cost">₹3,30,000</span>
+        </div>
+        <div class="table-row">
+          <span>Vendor Restaurant Catalog & Menu System</span>
+          <span class="badge badge-neutral">Medium</span>
+          <span>64h</span>
+          <span class="row-cost">₹1,40,800</span>
+        </div>
+        <div class="table-row">
+          <span>Payment Gateway & Escrow Split Payouts</span>
+          <span class="badge badge-orange">Complex</span>
+          <span>150h</span>
+          <span class="row-cost">₹3,30,000</span>
+        </div>
+        <div class="table-row">
+          <span>Delivery Partner Dispatch Mobile App</span>
+          <span class="badge badge-orange">Complex</span>
+          <span>150h</span>
+          <span class="row-cost">₹3,30,000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILT FOR EVERY STAGE (NO FAKE TESTIMONIALS) -->
+<section class="section-py bg-white">
+  <div class="content-container">
+    <div class="section-title-wrap text-center">
+      <span class="badge badge-orange">WHO USES COSTBUILD</span>
+      <h2 class="section-headline">Built for Every Stage of Software Development</h2>
+      <p class="section-subcopy">
+        Eliminating ambiguity whether you are raising pre-seed capital, scoping client projects, or planning internal tools.
+      </p>
+    </div>
+
+    <div class="personas-grid">
+      <div class="persona-card card">
+        <div class="persona-icon-box">
+          <app-icon name="zap" [size]="22" color="#EA580C" />
+        </div>
+        <h4>Startup Founders</h4>
+        <p>Budget runway accurately, plan your MVP scope, and enter investor meetings with defensible development forecasts.</p>
+      </div>
+
+      <div class="persona-card card">
+        <div class="persona-icon-box">
+          <app-icon name="building" [size]="22" color="#8B7CE8" />
+        </div>
+        <h4>Agencies & Studios</h4>
+        <p>Generate professional estimations for client RFPs in minutes rather than burning senior engineering days on spreadsheets.</p>
+      </div>
+
+      <div class="persona-card card">
+        <div class="persona-icon-box">
+          <app-icon name="code" [size]="22" color="#EA580C" />
+        </div>
+        <h4>Freelancers & Consultants</h4>
+        <p>Price your development projects with confidence and transparent hourly breakdowns that eliminate scope disputes.</p>
+      </div>
+
+      <div class="persona-card card">
+        <div class="persona-icon-box">
+          <app-icon name="cpu" [size]="22" color="#8B7CE8" />
+        </div>
+        <h4>Product Managers</h4>
+        <p>Compare tech stacks, architectural trade-offs, and QA requirements before committing engineering sprint velocity.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIGURABLE DEMO PRICING CARDS -->
+<section class="section-py bg-secondary">
+  <div class="content-container">
+    <div class="section-title-wrap text-center">
+      <span class="badge badge-lavender">TRANSPARENT PLANS</span>
+      <h2 class="section-headline">Simple, Predictable Plans</h2>
+      <p class="section-subcopy">
+        Explore all platform capabilities with our demo tiers. No credit card required.
+      </p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free Plan -->
+      <div class="pricing-card card">
+        <div class="plan-header">
+          <span class="plan-name">Free Starter</span>
+          <div class="plan-price">₹0 <span>/ month</span></div>
+          <p class="plan-desc">For indie hackers and early ideation.</p>
+        </div>
+        <ul class="plan-features">
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> 3 Detailed Estimates / month</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Standard Rate Card Calculation</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> MVP Scenario Generation</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Browser Printing Export</li>
+        </ul>
+        <a routerLink="/register" class="btn btn-secondary w-full">Get Started Free</a>
+      </div>
+
+      <!-- Pro Plan (Featured) -->
+      <div class="pricing-card card card-featured">
+        <div class="featured-badge">MOST POPULAR</div>
+        <div class="plan-header">
+          <span class="plan-name">Professional</span>
+          <div class="plan-price text-orange">₹2,499 <span>/ month</span></div>
+          <p class="plan-desc">For active founders and consulting leads.</p>
+        </div>
+        <ul class="plan-features">
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Unlimited Saved Estimates</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> AI Architecture & Risk Insight Engine</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> 3 Interactive Scenarios (MVP/Rec/Ent)</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> High-Resolution PDF & JSON Exports</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Project Tracking & Milestone Checklists</li>
+        </ul>
+        <a routerLink="/app/new-estimate" class="btn btn-primary w-full">Start Free Trial</a>
+      </div>
+
+      <!-- Team Plan -->
+      <div class="pricing-card card">
+        <div class="plan-header">
+          <span class="plan-name">Agency & Team</span>
+          <div class="plan-price">₹7,999 <span>/ month</span></div>
+          <p class="plan-desc">For software agencies and venture studios.</p>
+        </div>
+        <ul class="plan-features">
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Multi-seat Team Collaboration</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Custom Agency Rate Cards</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> White-label Client Report PDFs</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Dedicated API Benchmark Access</li>
+          <li><app-icon name="check" [size]="14" color="#16A34A" /> Priority Architectural Support</li>
+        </ul>
+        <a routerLink="/pricing" class="btn btn-secondary w-full">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESSIBLE FAQ ACCORDION -->
+<section class="section-py bg-white">
+  <div class="content-container">
+    <div class="section-title-wrap text-center">
+      <span class="badge badge-orange">FREQUENTLY ASKED QUESTIONS</span>
+      <h2 class="section-headline">Everything You Need to Know</h2>
+      <p class="section-subcopy">
+        Straight answers on our methodology, accuracy, and decision-support modeling.
+      </p>
+    </div>
+
+    <div class="faq-accordion-wrap">
+      @for (faq of faqs(); track faq.q; let i = $index) {
+        <div class="faq-item card" [class.faq-open]="faq.open">
+          <button
+            type="button"
+            class="faq-question-btn"
+            (click)="toggleFaq(i)"
+            [attr.aria-expanded]="faq.open"
+          >
+            <span class="faq-q-text">{{ faq.q }}</span>
+            <app-icon [name]="faq.open ? 'chevron-up' : 'chevron-down'" [size]="18" />
+          </button>
+          @if (faq.open) {
+            <div class="faq-answer-body">
+              <p>{{ faq.a }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CALL TO ACTION -->
+<section class="final-cta-section">
+  <div class="content-container text-center">
+    <div class="cta-inner card-orange">
+      <div class="cta-badge">
+        <app-icon name="sparkles" [size]="16" color="#EA580C" />
+        <span>CLEAR CAPITAL PLANNING</span>
+      </div>
+      <h2 class="cta-headline">Your Idea Deserves a Clear Plan.</h2>
+      <p class="cta-copy">
+        Do not waste capital on unpredictable development cycles. Build your first estimate in less than 3 minutes.
+      </p>
+      <div class="cta-buttons">
+        <a routerLink="/app/new-estimate" class="btn btn-primary btn-lg">
+          <app-icon name="calculator" [size]="18" />
+          Build Your First Estimate
+        </a>
+        <a routerLink="/how-it-works" class="btn btn-secondary btn-lg">
+          Explore Methodology
+        </a>
+      </div>
+      <div class="cta-footnote">
+        Illustrative decision-support outputs &bull; Free instant access
+      </div>
+    </div>
+  </div>
+</section>

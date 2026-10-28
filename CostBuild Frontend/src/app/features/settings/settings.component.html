@@ -1,0 +1,205 @@
+<div class="settings-page">
+  <div class="settings-header">
+    <h1 class="page-title">Workspace Settings</h1>
+    <p class="page-subtitle">Configure estimation rate defaults, currency display, and local storage backups.</p>
+  </div>
+
+  <div class="settings-layout">
+    <!-- General Calculation Preferences -->
+    <div class="settings-card card">
+      <div class="card-head">
+        <app-icon name="sliders" [size]="18" color="#EA580C" />
+        <div>
+          <h3>Calculation & Currency Preferences</h3>
+          <p>Configure default currency and regional benchmark multipliers for new estimates.</p>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label">Default Currency</label>
+          <select
+            [ngModel]="currency()"
+            (ngModelChange)="currency.set($event)"
+            class="form-control"
+          >
+            <option value="INR">INR (₹ - Indian Rupee)</option>
+            <option value="USD">USD ($ - US Dollar)</option>
+            <option value="EUR">EUR (€ - Euro)</option>
+            <option value="GBP">GBP (£ - British Pound)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Default Benchmark Region</label>
+          <select
+            [ngModel]="defaultRegion()"
+            (ngModelChange)="defaultRegion.set($event)"
+            class="form-control"
+          >
+            <option value="india">India</option>
+            <option value="southeast_asia">Southeast Asia</option>
+            <option value="latam">Latin America</option>
+            <option value="eastern_europe">Eastern Europe</option>
+            <option value="western_europe">Western Europe</option>
+            <option value="us_canada">United States & Canada</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Default Hiring Resource Model</label>
+        <select
+          [ngModel]="defaultHiringModel()"
+          (ngModelChange)="defaultHiringModel.set($event)"
+          class="form-control"
+        >
+          <option value="small_agency">Small Development Agency</option>
+          <option value="established_agency">Established Top-Tier Agency</option>
+          <option value="freelancer">Freelancer / Independent Contractor</option>
+          <option value="in_house">In-House Dedicated Team</option>
+          <option value="mixed">Mixed Hybrid Team</option>
+        </select>
+      </div>
+
+      <div class="card-head mt-3">
+        <div>
+          <h3>Indian Hourly Rate Card</h3>
+          <p>Set the INR rate used by new estimates. Existing estimates keep their saved totals.</p>
+        </div>
+      </div>
+      <div class="form-row-2">
+        @for (model of rateModels; track model.key) {
+          <div class="form-group">
+            <label class="form-label" [for]="'rate-' + model.key">{{ model.label }} (₹/hour)</label>
+            <input
+              [id]="'rate-' + model.key"
+              type="number"
+              min="100"
+              max="100000"
+              step="50"
+              class="form-control"
+              [ngModel]="hourlyRates()[model.key]"
+              (ngModelChange)="updateHourlyRate(model.key, $event)"
+            />
+          </div>
+        }
+      </div>
+
+      <div class="mt-3">
+        <button type="button" class="btn btn-primary btn-sm" (click)="saveSettings()">
+          Save Preferences
+        </button>
+      </div>
+    </div>
+
+    <!-- Notification Preferences -->
+    <div class="settings-card card">
+      <div class="card-head">
+        <app-icon name="info" [size]="18" color="#8B7CE8" />
+        <div>
+          <h3>Workspace Alerts & Notifications</h3>
+          <p>Manage in-app toasts and weekly summary reminders.</p>
+        </div>
+      </div>
+
+      <div class="checkbox-list">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [ngModel]="emailNotifs()"
+            (ngModelChange)="emailNotifs.set($event)"
+            class="custom-checkbox"
+          />
+          <div>
+            <strong>Interactive In-App Notifications</strong>
+            <p>Show toast confirmations for estimate saves, duplications, and exports.</p>
+          </div>
+        </label>
+
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [ngModel]="weeklyReports()"
+            (ngModelChange)="weeklyReports.set($event)"
+            class="custom-checkbox"
+          />
+          <div>
+            <strong>Simulated Sprint Summary Alerts</strong>
+            <p>Receive milestone reminders when tracked projects have pending features.</p>
+          </div>
+        </label>
+      </div>
+
+      <div class="mt-3">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="saveSettings()">
+          Update Alerts
+        </button>
+      </div>
+    </div>
+
+    <!-- Data Management & Backups -->
+    <div class="settings-card card">
+      <div class="card-head">
+        <app-icon name="database" [size]="18" color="#78716C" />
+        <div>
+          <h3>Local Data Persistence & Backups</h3>
+          <p>Export your estimates, manage sample demonstration data, or clear workspace.</p>
+        </div>
+      </div>
+
+      <div class="data-actions-grid">
+        <div class="action-box">
+          <div>
+            <h4>Export Full Workspace Backup</h4>
+            <p>Download a JSON backup containing all estimates, tracked projects, and settings.</p>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="exportAllWorkspaceData()">
+            <app-icon name="download" [size]="15" />
+            Export JSON Backup
+          </button>
+        </div>
+
+        <div class="action-box">
+          <div>
+            <h4>Clear Sample Demo Data</h4>
+            <p>Removes the 5 pre-seeded demo estimates, leaving only user-created estimates.</p>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="isClearDemoOpen.set(true)">
+            Clear Demo Records
+          </button>
+        </div>
+
+        <div class="action-box">
+          <div>
+            <h4>Restore Standard Demo Data</h4>
+            <p>Re-seeds the workspace with the Food Delivery, AI LMS, and Marketplace templates.</p>
+          </div>
+          <button type="button" class="btn btn-lavender btn-sm" (click)="isResetDemoOpen.set(true)">
+            Restore Demo Templates
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Clear Demo Confirmation -->
+<app-confirmation-dialog
+  [isOpen]="isClearDemoOpen()"
+  title="Clear Demo Estimates"
+  message="Are you sure you want to remove pre-seeded demo estimates? User-created estimates will remain intact."
+  confirmText="Clear Demo Data"
+  (confirmed)="confirmClearDemo()"
+  (cancelled)="isClearDemoOpen.set(false)"
+/>
+
+<!-- Reset Demo Confirmation -->
+<app-confirmation-dialog
+  [isOpen]="isResetDemoOpen()"
+  title="Restore Demo Data"
+  message="This will re-seed your workspace with standard verified demonstration models."
+  confirmText="Restore Demo Models"
+  (confirmed)="confirmResetDemo()"
+  (cancelled)="isResetDemoOpen.set(false)"
+/>
